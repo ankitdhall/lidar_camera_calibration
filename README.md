@@ -5,13 +5,13 @@ The package was used to calibrate a Velodyne VLP-16 LiDAR with a ZED Stereo came
 The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependencies, both of which are available on this repository itself.
 
 
-### Contents
+## Contents
 1. [Setup](#setup)
 2. [Getting Started](#getting-started)
 3. [Usage](#usage)
 4. [Future Improvements](#future-improvements)
 
-### Setup
+## Setup
 Prerequisites:
 
 [ROS](http://www.ros.org/)  
@@ -21,11 +21,11 @@ Prerequisites:
 ROS package for the camera and LiDAR you wish to calibrate.
 Clone this repository to your ROS workspace.
 
-### Getting Started
+## Getting Started
 
 There are a couple of configuration files that need to be specfied in order to calibrate the camera and the LiDAR. The config files are available in the `cross_sensor_calibration/conf` directory.
 
-#### config_file.txt
+### config_file.txt
 
 >1280 720  
 >-2.5 2.5  
@@ -56,7 +56,7 @@ x in [cloud_filter_x-, cloud_filter_x+]
 y in [cloud_filter_y-, cloud_filter_y+]  
 z in [cloud_filter_z-, cloud_filter_z+]  
 
-#### marker_coordinates.txt
+### marker_coordinates.txt
 
 The ArUco markers are stuck on the board such that when it is hung from a corner, the ArUco marker is on the left side of the board.
 
@@ -81,7 +81,7 @@ The first line specfies 'N' the number of boards being used. Followed by N*5 lin
 
 All dimensions in `marker_coordinates.txt` are in centimeters.
 
-#### cross_sensor_calibration.yaml
+### cross_sensor_calibration.yaml
 
 >cross_sensor_calibration:  
 >  camera_frame_topic: /frontNear/left/image_raw  
@@ -90,17 +90,17 @@ All dimensions in `marker_coordinates.txt` are in centimeters.
 
 Contains name of camera and velodyne topics that the node will subscribe to.
 
-#### find_velodyne_points.launch
+### find_velodyne_points.launch
 
 Parameters are required for the `aruco_mapping` node and need to be specfied here. Ensure that the topics are mapped correctly for the node to function.
-Other parameters required are:
+Other parameters required are:  
 calibration_file(.ini format)    
 num_of_markers  
 marker_size(in meters)  
 
 For more information about the `aruco_mapping` package refer to their [documentation](https://github.com/SmartRoboticSystems/aruco_mapping).
 
-### Usage
+## Usage
 
 Before launching the calibration node ensure that the ArUco markers are visible in the camera frame and the markers are arragned in ascending order of their `ArUco ids` from left to right as viewed by the camera. Use the following command to start the calibration process.
 
@@ -116,7 +116,7 @@ Line segments for each board are to be marked in clock-wise order starting from 
 After marking all the line-segments, the rigid-body transformation between the camera and the LiDAR frame will be displayed.
 
 
-### Future improvements
+## Future improvements
 
 - [ ] automate process of marking line-segments
 - [ ] iterative process with weighted average over multiple runs
