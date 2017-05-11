@@ -14,11 +14,9 @@ The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependen
 ### Setup
 Prerequisites:
 
-[ROS](http://www.ros.org/)
-
-[aruco_ros]
-
-[aruco_mapping]
+[ROS](http://www.ros.org/)  
+[aruco_ros]  
+[aruco_mapping]  
 
 ROS package for the camera and LiDAR you wish to calibrate.
 Clone this repository to your ROS workspace.
@@ -29,91 +27,60 @@ There are a couple of configuration files that need to be specfied in order to c
 
 `config_file.txt`
 
->1280 720
-
->-2.5 2.5
-
->-4.0 4.0
-
->0.0 2.5
-
->0.05
-
->2
-
->0
-
->611.651245 0.0        642.388357 0.0
-
->0.0        688.443726 365.971718 0.0
-
->0.0        0.0        1.0        0.0
+>1280 720  
+>-2.5 2.5  
+>-4.0 4.0  
+>0.0 2.5  
+>0.05  
+>2  
+>0  
+>611.651245 0.0        642.388357 0.0  
+>0.0        688.443726 365.971718 0.0  
+>0.0        0.0        1.0        0.0  
 
 The file contains specifications about the following:
 
->image_width image_height
-
->cloud_filter_x- cloud_filter_x+
-
->cloud_filter_y- cloud_filter_y+
-
->cloud_filter_z- cloud_filter_z+
-
->cloud_intensity_threshold
-
->number_of_markers
-
->use_camera_info_topic?
-
->camera_matrix
+>image_width image_height  
+>cloud_filter_x- cloud_filter_x+  
+>cloud_filter_y- cloud_filter_y+  
+>cloud_filter_z- cloud_filter_z+  
+>cloud_intensity_threshold  
+>number_of_markers  
+>use_camera_info_topic?  
+>fx     0       cx      0  
+>0      fy      cy      0
+>0      0       1       0 
 
 cloud_filter_i- and cloud_filter_i+ are in meters.
 
 `marker_coordinates.txt`
 
->2
-
->48.4
-
->46.8
-
->4.0
-
->5.0
-
->20.5
-
->49.0
-
->46.8
-
->4.0
-
->5.0
-
->20.5
+>2  
+>48.4  
+>46.8  
+>4.0  
+>5.0  
+>20.5  
+>49.0  
+>46.8  
+>4.0  
+>5.0  
+>20.5  
 
 The first line specfies 'N' the number of boards being used. Followed by N*5 lines with the following information about the dimensions of the board:
->width
+>width  
+>height  
+>border horizontal width of ArUco marker  
+>border vertical width of ArUco marker  
+>edge length of ArUco marker  
 
->height
-
->border horizontal width of ArUco marker
-
->border vertical width of ArUco marker
-
->edge length of ArUco marker
-
-All dimensions are in centimeters.
+All dimensions in `marker_coordinates.txt` are in centimeters.
 
 `cross_sensor_calibration.yaml`
 
->cross_sensor_calibration:
-
->  camera_frame_topic: /frontNear/left/image_raw
-
->  camera_info_topic: /frontNear/left/camera_info
-
+>cross_sensor_calibration:  
+>  camera_frame_topic: /frontNear/left/image_raw  
+>  camera_info_topic: /frontNear/left/camera_info  
 >  velodyne_topic: /velodyne_points
 
 Contains name of camera and velodyne topics that the node will subscribe to.
