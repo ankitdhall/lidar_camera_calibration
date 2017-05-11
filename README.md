@@ -25,7 +25,7 @@ Clone this repository to your ROS workspace.
 
 There are a couple of configuration files that need to be specfied in order to calibrate the camera and the LiDAR. The config files are available in the `cross_sensor_calibration/conf` directory.
 
-`config_file.txt`
+#### config_file.txt
 
 >1280 720  
 >-2.5 2.5  
@@ -51,9 +51,14 @@ The file contains specifications about the following:
 >0      fy      cy      0  
 >0      0       1       0 
 
-cloud_filter_i- and cloud_filter_i+ are in meters.
+cloud_filter_i- and cloud_filter_i+ are used to remove unwanted points in the cloud and are in meters. The filtred point cloud makes it easier to mark the board edges. It contains all points (x, y, z) such that,  
+x in [cloud_filter_x-, cloud_filter_x+]  
+y in [cloud_filter_y-, cloud_filter_y+]  
+z in [cloud_filter_z-, cloud_filter_z+]  
 
-`marker_coordinates.txt`
+#### marker_coordinates.txt
+
+The ArUco markers are stuck on the board such that when it is hung from a corner, the ArUco marker is on the left side of the board.
 
 >2  
 >48.4  
@@ -70,13 +75,13 @@ cloud_filter_i- and cloud_filter_i+ are in meters.
 The first line specfies 'N' the number of boards being used. Followed by N*5 lines with the following information about the dimensions of the board:
 >width  
 >height  
->border horizontal width of ArUco marker  
->border vertical width of ArUco marker  
->edge length of ArUco marker  
+>border_horizontal_width_of_ArUco_marker  
+>border_vertical_width_of_ArUco_marker  
+>edge_length_of_ArUco_marker  
 
 All dimensions in `marker_coordinates.txt` are in centimeters.
 
-`cross_sensor_calibration.yaml`
+#### cross_sensor_calibration.yaml
 
 >cross_sensor_calibration:  
 >  camera_frame_topic: /frontNear/left/image_raw  
@@ -85,6 +90,15 @@ All dimensions in `marker_coordinates.txt` are in centimeters.
 
 Contains name of camera and velodyne topics that the node will subscribe to.
 
+#### find_velodyne_points.launch
+
+Parameters are required for the `aruco_mapping` node and need to be specfied here. Ensure that the topics are mapped correctly for the node to function.
+Other parameters required are:
+calibration_file(.ini format)    
+num_of_markers  
+marker_size(in meters)  
+
+For more information about the `aruco_mapping` package refer to their [documentation](https://github.com/SmartRoboticSystems/aruco_mapping).
 
 ### Usage
 
