@@ -48,7 +48,7 @@ The file contains specifications about the following:
 >number_of_markers  
 >use_camera_info_topic?  
 >fx     0       cx      0  
->0      fy      cy      0
+>0      fy      cy      0  
 >0      0       1       0 
 
 cloud_filter_i- and cloud_filter_i+ are in meters.
