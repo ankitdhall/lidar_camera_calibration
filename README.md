@@ -15,7 +15,9 @@ The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependen
 Prerequisites:
 
 [ROS](http://www.ros.org/)
+
 [aruco_ros]
+
 [aruco_mapping]
 
 ROS package for the camera and LiDAR you wish to calibrate.
@@ -28,25 +30,41 @@ There are a couple of configuration files that need to be specfied in order to c
 `config_file.txt`
 
 >1280 720
+
 >-2.5 2.5
+
 >-4.0 4.0
+
 >0.0 2.5
+
 >0.05
+
 >2
+
 >0
+
 >611.651245 0.0        642.388357 0.0
+
 >0.0        688.443726 365.971718 0.0
+
 >0.0        0.0        1.0        0.0
 
 The file contains specifications about the following:
 
 >image_width image_height
+
 >cloud_filter_x- cloud_filter_x+
+
 >cloud_filter_y- cloud_filter_y+
+
 >cloud_filter_z- cloud_filter_z+
+
 >cloud_intensity_threshold
+
 >number_of_markers
+
 >use_camera_info_topic?
+
 >camera_matrix
 
 cloud_filter_i- and cloud_filter_i+ are in meters.
@@ -54,22 +72,36 @@ cloud_filter_i- and cloud_filter_i+ are in meters.
 `marker_coordinates.txt`
 
 >2
+
 >48.4
+
 >46.8
+
 >4.0
+
 >5.0
+
 >20.5
+
 >49.0
+
 >46.8
+
 >4.0
+
 >5.0
+
 >20.5
 
 The first line specfies 'N' the number of boards being used. Followed by N*5 lines with the following information about the dimensions of the board:
 >width
+
 >height
+
 >border horizontal width of ArUco marker
+
 >border vertical width of ArUco marker
+
 >edge length of ArUco marker
 
 All dimensions are in centimeters.
@@ -77,8 +109,11 @@ All dimensions are in centimeters.
 `cross_sensor_calibration.yaml`
 
 >cross_sensor_calibration:
+
 >  camera_frame_topic: /frontNear/left/image_raw
+
 >  camera_info_topic: /frontNear/left/camera_info
+
 >  velodyne_topic: /velodyne_points
 
 Contains name of camera and velodyne topics that the node will subscribe to.
@@ -89,7 +124,7 @@ Contains name of camera and velodyne topics that the node will subscribe to.
 Before launching the calibration node ensure that the ArUco markers are visible in the camera frame and the markers are arragned in ascending order of their `ArUco ids` from left to right as viewed by the camera. Use the following command to start the calibration process.
 
 ```shell
-proslaunch cross_sensor_calibration find_velodyne_points.launch
+roslaunch cross_sensor_calibration find_velodyne_points.launch
 ```
 
 An initial [R|t] between the camera and the various ArUco markers will be estimated. Following this, a filtered point cloud (according to the specifications in the `config_file.txt`) will be displayed. The user needs to mark each edge of the rectangular board.
