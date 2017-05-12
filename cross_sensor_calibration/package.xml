@@ -6,7 +6,7 @@
   </description>
   <version>0.0.1</version>
   <maintainer email="noemail@e.mail">Ankit Dhall, Kunal Chelani, Vishnu R.</maintainer>
-  <license>BSD</license>
+  <license>LGPL</license>
 
 
   <buildtool_depend>catkin</buildtool_depend>
