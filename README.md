@@ -15,15 +15,15 @@ The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependen
 Prerequisites:
 
 [ROS](http://www.ros.org/)  
-[aruco_ros]  
-[aruco_mapping]  
+[aruco_ros](https://github.com/pal-robotics/aruco_ros)  
+[aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping)  
 
 ROS package for the camera and LiDAR you wish to calibrate.
 Clone this repository to your ROS workspace.
 
 ## Getting Started
 
-There are a couple of configuration files that need to be specfied in order to calibrate the camera and the LiDAR. The config files are available in the `cross_sensor_calibration/conf` directory.
+There are a couple of configuration files that need to be specfied in order to calibrate the camera and the LiDAR. The config files are available in the `cross_sensor_calibration/conf` directory. The `find_velodyne_points.launch` file is available in the `cross_sensor_calibration/launch` directory.
 
 ### config_file.txt
 
@@ -51,10 +51,10 @@ The file contains specifications about the following:
 >0      fy      cy      0  
 >0      0       1       0 
 
-cloud_filter_i- and cloud_filter_i+ are used to remove unwanted points in the cloud and are in meters. The filtred point cloud makes it easier to mark the board edges. It contains all points (x, y, z) such that,  
-x in [cloud_filter_x-, cloud_filter_x+]  
-y in [cloud_filter_y-, cloud_filter_y+]  
-z in [cloud_filter_z-, cloud_filter_z+]  
+`cloud_filter_i-` and `cloud_filter_i+` are used to remove unwanted points in the cloud and are in meters. The filtred point cloud makes it easier to mark the board edges. It contains all points (x, y, z) such that,  
+x in [`cloud_filter_x-`, `cloud_filter_x+`]  
+y in [`cloud_filter_y-`, `cloud_filter_y+`]  
+z in [`cloud_filter_z-`, `cloud_filter_z+`]  
 
 ### marker_coordinates.txt
 
@@ -72,12 +72,15 @@ The ArUco markers are stuck on the board such that when it is hung from a corner
 >5.0  
 >20.5  
 
+After sticking the ArUco marker on a planar cardboard, it will look like this.
+![alt text](images/board_dim_label.jpg "Reference image for board dimensions")
+
 The first line specfies 'N' the number of boards being used. Followed by N*5 lines with the following information about the dimensions of the board:
->width  
->height  
->border_horizontal_width_of_ArUco_marker  
->border_vertical_width_of_ArUco_marker  
->edge_length_of_ArUco_marker  
+>length(s1)  
+>breadth(s2)  
+>border_width_along_length(b1)  
+>border_width_along_breadth(b2)  
+>edge_length_of_ArUco_marker(e)  
 
 All dimensions in `marker_coordinates.txt` are in centimeters.
 
@@ -94,15 +97,21 @@ Contains name of camera and velodyne topics that the node will subscribe to.
 
 Parameters are required for the `aruco_mapping` node and need to be specfied here. Ensure that the topics are mapped correctly for the node to function.
 Other parameters required are:  
-calibration_file(.ini format)    
-num_of_markers  
-marker_size(in meters)  
+*calibration_file(.ini format)    
+*num_of_markers  
+*marker_size(in meters)  
 
 For more information about the `aruco_mapping` package refer to their [documentation](https://github.com/SmartRoboticSystems/aruco_mapping).
 
 ## Usage
 
-Before launching the calibration node ensure that the ArUco markers are visible in the camera frame and the markers are arragned in ascending order of their `ArUco ids` from left to right as viewed by the camera. Use the following command to start the calibration process.
+Before launching the calibration node ensure that the ArUco markers are visible in the camera frame and the markers are arragned in ascending order of their `ArUco ids` (`ArUco ids` and their co-ordinate frame can be found/viewed by running the original `aruco_mapping` [package](https://github.com/SmartRoboticSystems/aruco_mapping)) from left to right as viewed by the camera.
+
+The setup should look something like this.
+![alt text](images/experimental_setup.jpg "Setup for calibration")
+
+
+Use the following command to start the calibration process once everything is setup.
 
 ```shell
 roslaunch cross_sensor_calibration find_velodyne_points.launch
