@@ -14,9 +14,9 @@ The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependen
 ## Setup
 Prerequisites:
 
-[ROS](http://www.ros.org/)  
-[aruco_ros](https://github.com/pal-robotics/aruco_ros)  
-a slightly modified [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping)  
+* [ROS](http://www.ros.org/)  
+* [aruco_ros](https://github.com/pal-robotics/aruco_ros)  
+* a slightly modified [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping)  
 
 ROS package for the camera and LiDAR you wish to calibrate.  
 Clone this repository to your machine. Put the three folders in `path/to/workspace/src` and run `catkin_make`.
@@ -63,7 +63,8 @@ The `use_camera_info_topic?` is a boolean flag and takes values `1` or `0`. The 
 
 ### marker_coordinates.txt
 
-The ArUco markers are stuck on the board such that when it is hung from a corner, the ArUco marker is on the left side of the board.
+The ArUco markers are stuck on the board such that when it is hung from a corner, the ArUco marker is on the left side of the board. After sticking the ArUco marker on a planar cardboard, it will look like this.
+![alt text](images/board_dim_label.jpg "Reference image for board dimensions")
 
 >2  
 >48.4  
@@ -76,9 +77,6 @@ The ArUco markers are stuck on the board such that when it is hung from a corner
 >4.0  
 >5.0  
 >20.5  
-
-After sticking the ArUco marker on a planar cardboard, it will look like this.
-![alt text](images/board_dim_label.jpg "Reference image for board dimensions")
 
 The first line specfies 'N' the number of boards being used. Followed by N*5 lines with the following information about the dimensions of the board:
 >length (s1)  
@@ -137,11 +135,11 @@ This contains the tranformation from each ArUco marker's center to the camera ce
 ### points.txt
 This contains `num_of_sensors*(num_of_markers*points_per_board)` 3D points, here, `num_of_sensors` is fixed to 2 and the `points_per_board`=4, the four corner points.  
 So if `num_of_markers` = 2, then,  
-the first 4 points represent the first board,  
-next 4 points represent the second board,  
+* the first 4 points represent the first board,  
+* next 4 points represent the second board,  
 both of which are 3D co-ordinates in meters, viewed from the `lidar` origin.  
-the next 4 points represent the first board,  
-the next 4 points represent the second board,  
+* the next 4 points represent the first board,  
+* the next 4 points represent the second board,  
 both of which are 3D co-ordinates in meters, viewed from the `camera` origin.  
 The points are ordered according to their correspondences, i.e. the second point in the first 8 points has a correspondence with the second point in the last 8 points in this case.
 
