@@ -182,7 +182,7 @@ ArucoMapping::imageCallback(const sensor_msgs::ImageConstPtr &original_image)
   
   // Show image
   cv::imshow("Mono8", I);
-  cv::waitKey(10);
+  cv::waitKey(2000);
   ros::shutdown();
 }
 
@@ -281,7 +281,8 @@ ArucoMapping::processImage(cv::Mat input_image,cv::Mat output_image)
   //------------------------------------------------------
   // FOR EVERY MARKER DO
   //------------------------------------------------------
-  std::ofstream outfile("/home/rrc/catkin_ws/src/cross_sensor_calibration/conf/transform.txt", std::ios_base::trunc);
+  std::string pkg_loc = ros::package::getPath("lidar_camera_calibration") + "/conf/transform.txt";
+  std::ofstream outfile(pkg_loc.c_str(), std::ios_base::trunc);
   for(size_t i = 0; i < temp_markers.size();i++)
   {
     int index;

@@ -9,6 +9,7 @@
 #include <pcl/point_cloud.h>
 #include <pcl/io/pcd_io.h>
 
+#include <ros/package.h>
 
 #include <pcl_ros/point_cloud.h>
 #include <boost/foreach.hpp>
@@ -60,7 +61,9 @@ struct config_settings
 
 void readConfig()
 {
-	std::ifstream infile("/home/rrc/catkin_ws/src/lidar_camera_calibration/conf/config_file.txt");
+	std::string pkg_loc = ros::package::getPath("lidar_camera_calibration");
+	//std::cout<< "The conf file location: " << pkg_loc <<"/conf/config_file.txt" << std::endl;
+	std::ifstream infile(pkg_loc + "/conf/config_file.txt");
 	float left_limit=0.0, right_limit=0.0;
 
 	infile >> config.s.width >> config.s.height;
