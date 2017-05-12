@@ -27,9 +27,7 @@ Put the three folders in `path/to/your/ros/workspace/src` and run `catkin_make`.
 
 ## Getting Started
 
-                           |  
-:-------------------------:|:-------------------------:
-![](images/setup_view1.jpg)  |  ![](images/setup_view2.jpg)
+<img src="images/setup_view1.jpg" width="432"/> <img src="images/setup_view2.jpg" width="432"/>
 
 There are a couple of configuration files that need to be specfied in order to calibrate the camera and the LiDAR. The config files are available in the `cross_sensor_calibration/conf` directory. The `find_velodyne_points.launch` file is available in the `cross_sensor_calibration/launch` directory.
 
@@ -76,9 +74,6 @@ The ArUco markers are stuck on the board such that when it is hung from a corner
 After everything is setup, it should look something like this. Notice how the axis are aligned. `y-axis` should point outwards, `x-axis` along the `breadth (s2)` and `z-axis` along the `length (s1)`. The markers are also arranged so that the `ArUco id` are in ascending order.
 ![alt text](images/aruco_axis.png "Axis of the ArUco markers as seen from aruco_mapping")
 
-After sticking the ArUco marker on a planar cardboard, it will look like this.
-![alt text](images/board_dim_label.jpg "Reference image for board dimensions")
-
 >2  
 >48.4  
 >46.8  
@@ -90,6 +85,9 @@ After sticking the ArUco marker on a planar cardboard, it will look like this.
 >4.0  
 >5.0  
 >20.5  
+
+After sticking the ArUco marker on a planar cardboard, it will look like this.
+![alt text](images/board_dim_label.jpg "Reference image for board dimensions")
 
 The first line specfies 'N' the number of boards being used. Followed by N*5 lines with the following information about the dimensions of the board:
 >length (s1)  
