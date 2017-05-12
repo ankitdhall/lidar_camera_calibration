@@ -27,9 +27,7 @@ Put the three folders in `path/to/your/ros/workspace/src` and run `catkin_make`.
 
 ## Getting Started
 
-                           |  
-:-------------------------:|:-------------------------:
-![](images/setup_view1.jpg)  |  ![](images/setup_view2.jpg)
+<img src="images/setup_view1.jpg" width="425"/> <img src="images/setup_view2.jpg" width="425"/>
 
 There are a couple of configuration files that need to be specfied in order to calibrate the camera and the LiDAR. The config files are available in the `cross_sensor_calibration/conf` directory. The `find_velodyne_points.launch` file is available in the `cross_sensor_calibration/launch` directory.
 
