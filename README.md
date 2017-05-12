@@ -16,10 +16,10 @@ Prerequisites:
 
 [ROS](http://www.ros.org/)  
 [aruco_ros](https://github.com/pal-robotics/aruco_ros)  
-[aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping)  
+a slightly modified [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping)  
 
-ROS package for the camera and LiDAR you wish to calibrate.
-Clone this repository to your ROS workspace.
+ROS package for the camera and LiDAR you wish to calibrate.  
+Clone this repository to your machine. Put the three folders in `path/to/workspace/src` and run `catkin_make`.
 
 ## Getting Started
 
@@ -41,9 +41,9 @@ There are a couple of configuration files that need to be specfied in order to c
 The file contains specifications about the following:
 
 >image_width image_height  
->cloud_filter_x- cloud_filter_x+  
->cloud_filter_y- cloud_filter_y+  
->cloud_filter_z- cloud_filter_z+  
+>x- x+  
+>y- y+  
+>z- z+  
 >cloud_intensity_threshold  
 >number_of_markers  
 >use_camera_info_topic?  
@@ -51,10 +51,15 @@ The file contains specifications about the following:
 >0      fy      cy      0  
 >0      0       1       0 
 
-`cloud_filter_i-` and `cloud_filter_i+` are used to remove unwanted points in the cloud and are in meters. The filtred point cloud makes it easier to mark the board edges. It contains all points (x, y, z) such that,  
-x in [`cloud_filter_x-`, `cloud_filter_x+`]  
-y in [`cloud_filter_y-`, `cloud_filter_y+`]  
-z in [`cloud_filter_z-`, `cloud_filter_z+`]  
+`x-` and `x+`, `y-` and `y+`, `z-` and `z+` are used to remove unwanted points in the cloud and are specfied in meters. The filtred point cloud makes it easier to mark the board edges. The filtered pointcloud contains all points   
+(x, y, z) such that,  
+x in [`x-`, `x+`]  
+y in [`y-`, `y+`]  
+z in [`z-`, `z+`]  
+
+The `cloud_intensity_threshold` is used to filter points that have intensity lower than a specified value. The default value at which it works well is `0.05`. However, while marking, if there seem to be missing/less points on the cardboard edges, tweaking this value will might help.
+
+The `use_camera_info_topic?` is a boolean flag and takes values `1` or `0`. The `find_velodyne_points.launch` node uses camera parameters to process the points and display them for marking. If you wish to use the `camera_info` topic to read off the parameters, set this to `1`. Else, the explicitly provided camera parameters in `config_file.txt` are used.
 
 ### marker_coordinates.txt
 
@@ -76,11 +81,11 @@ After sticking the ArUco marker on a planar cardboard, it will look like this.
 ![alt text](images/board_dim_label.jpg "Reference image for board dimensions")
 
 The first line specfies 'N' the number of boards being used. Followed by N*5 lines with the following information about the dimensions of the board:
->length(s1)  
->breadth(s2)  
->border_width_along_length(b1)  
->border_width_along_breadth(b2)  
->edge_length_of_ArUco_marker(e)  
+>length (s1)  
+>breadth (s2)  
+>border_width_along_length (b1)  
+>border_width_along_breadth (b2)  
+>edge_length_of_ArUco_marker (e)  
 
 All dimensions in `marker_coordinates.txt` are in centimeters.
 
@@ -97,9 +102,9 @@ Contains name of camera and velodyne topics that the node will subscribe to.
 
 Parameters are required for the `aruco_mapping` node and need to be specfied here. Ensure that the topics are mapped correctly for the node to function.
 Other parameters required are:  
-*calibration_file(.ini format)    
-*num_of_markers  
-*marker_size(in meters)  
+* calibration_file(.ini format)    
+* num_of_markers  
+* marker_size(in meters)  
 
 For more information about the `aruco_mapping` package refer to their [documentation](https://github.com/SmartRoboticSystems/aruco_mapping).
 
@@ -124,6 +129,21 @@ Line segments for each board are to be marked in clock-wise order starting from 
 
 After marking all the line-segments, the rigid-body transformation between the camera and the LiDAR frame will be displayed.
 
+Intermediate values are logged in `conf/transform.txt` and `conf/points.txt`.
+
+### transform.txt
+This contains the tranformation from each ArUco marker's center to the camera center. Different markers are identified by their `ArUco ids`. The transform is represented by 3x1 vectors, `tvec` and `rvec`. `tvec` is in meters while `rvec` follows axis-angle representation. This file is written by the slightly modified `aruco_mapping` node. This node runs initially and writes the tranform values, after which the pointcloud is presented to the user for marking.
+
+### points.txt
+This contains `num_of_sensors*(num_of_markers*points_per_board)` 3D points, here, `num_of_sensors` is fixed to 2 and the `points_per_board`=4, the four corner points.  
+So if `num_of_markers` = 2, then,  
+the first 4 points represent the first board,  
+next 4 points represent the second board,  
+both of which are 3D co-ordinates in meters, viewed from the `lidar` origin.  
+the next 4 points represent the first board,  
+the next 4 points represent the second board,  
+both of which are 3D co-ordinates in meters, viewed from the `camera` origin.  
+The points are ordered according to their correspondences, i.e. the second point in the first 8 points has a correspondence with the second point in the last 8 points in this case.
 
 ## Future improvements
 
