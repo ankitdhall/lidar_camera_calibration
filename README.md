@@ -120,10 +120,9 @@ For more information about the `aruco_mapping` package refer to their [documenta
 
 ## Usage
 
+A more detailed video tutorial on how to go about using the node can be found at [https://youtu.be/SiPGPwNKE-Q](https://youtu.be/SiPGPwNKE-Q).
+
 Before launching the calibration node ensure that the ArUco markers are visible in the camera frame and the markers are arragned in ascending order of their `ArUco ids` (`ArUco ids` and their co-ordinate frame can be found/viewed by running the original `aruco_mapping` [package](https://github.com/SmartRoboticSystems/aruco_mapping)) from left to right as viewed by the camera.
-
-The setup should look something like this.
-
 
 Use the following command to start the calibration process once everything is setup.
 
