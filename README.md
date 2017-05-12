@@ -1,5 +1,7 @@
 # ROS package to calibrate a camera and a LiDAR.
 
+![alt text](images/experimental_setup.jpg "Setup for calibration")
+
 The package was used to calibrate a Velodyne VLP-16 LiDAR with a ZED Stereo camera. Point Gray Blackfly was also calibrated against VLP-16.
 
 The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependencies, both of which are available on this repository itself.
@@ -19,7 +21,7 @@ Prerequisites:
 * a slightly modified [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping)  
 
 ROS package for the camera and LiDAR you wish to calibrate.  
-Clone this repository to your machine. Put the three folders in `path/to/workspace/src` and run `catkin_make`.
+Clone this repository to your machine. Put the three folders in `path/to/your/ros/workspace/src` and run `catkin_make`.
 
 ## Getting Started
 
@@ -111,7 +113,6 @@ For more information about the `aruco_mapping` package refer to their [documenta
 Before launching the calibration node ensure that the ArUco markers are visible in the camera frame and the markers are arragned in ascending order of their `ArUco ids` (`ArUco ids` and their co-ordinate frame can be found/viewed by running the original `aruco_mapping` [package](https://github.com/SmartRoboticSystems/aruco_mapping)) from left to right as viewed by the camera.
 
 The setup should look something like this.
-![alt text](images/experimental_setup.jpg "Setup for calibration")
 
 
 Use the following command to start the calibration process once everything is setup.
