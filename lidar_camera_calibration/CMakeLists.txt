@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.4.6)
 include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
-project(cross_sensor_calibration)
+project(lidar_camera_calibration)
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -O3")
 
 #set the default path for built executables to the "bin" directory
@@ -34,8 +34,8 @@ add_definitions(${PCL_DEFINITIONS})
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(find_velodyne_points src/find_velodyne_points.cpp src/Corners.cpp) 
-target_link_libraries(find_velodyne_points ${PCL_LIBRARIES}) 
-target_link_libraries(find_velodyne_points ${catkin_LIBRARIES})
+add_executable(find_transform src/find_velodyne_points.cpp src/Corners.cpp) 
+target_link_libraries(find_transform ${PCL_LIBRARIES}) 
+target_link_libraries(find_transform ${catkin_LIBRARIES})
 
 

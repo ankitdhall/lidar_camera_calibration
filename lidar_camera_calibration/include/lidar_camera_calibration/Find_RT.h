@@ -16,7 +16,7 @@ using namespace Eigen;
 
 std::pair<MatrixXd, MatrixXd> readArray()
 {
-	std::ifstream infile("/home/rrc/catkin_ws/src/cross_sensor_calibration/conf/points.txt");
+	std::ifstream infile("/home/rrc/catkin_ws/src/lidar_camera_calibration/conf/points.txt");
 	int num_points=0;
 
 	infile >> num_points;
@@ -146,7 +146,7 @@ void readArucoPose()
 {
 	std::vector<Matrix4d> marker_pose;
 
-	std::ifstream infile("/home/rrc/catkin_ws/src/cross_sensor_calibration/conf/transform.txt");
+	std::ifstream infile("/home/rrc/catkin_ws/src/lidar_camera_calibration/conf/transform.txt");
 
 	std::string line;    
 	while (std::getline(infile, line))
@@ -190,8 +190,8 @@ void readArucoPose()
 	infile.close();
 
 	//std::vector<std::vector<std::pair<float, float> > > marker_coordinates;
-	infile.open("/home/rrc/catkin_ws/src/cross_sensor_calibration/conf/marker_coordinates.txt");
-	std::ofstream outfile("/home/rrc/catkin_ws/src/cross_sensor_calibration/conf/points.txt", std::ios_base::app);
+	infile.open("/home/rrc/catkin_ws/src/lidar_camera_calibration/conf/marker_coordinates.txt");
+	std::ofstream outfile("/home/rrc/catkin_ws/src/lidar_camera_calibration/conf/points.txt", std::ios_base::app);
 
 	int num_of_markers;
 	infile >> num_of_markers;

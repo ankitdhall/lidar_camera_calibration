@@ -60,7 +60,7 @@ struct config_settings
 
 void readConfig()
 {
-	std::ifstream infile("/home/rrc/catkin_ws/src/cross_sensor_calibration/conf/config_file.txt");
+	std::ifstream infile("/home/rrc/catkin_ws/src/lidar_camera_calibration/conf/config_file.txt");
 	float left_limit=0.0, right_limit=0.0;
 
 	infile >> config.s.width >> config.s.height;

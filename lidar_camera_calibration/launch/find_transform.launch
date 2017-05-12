@@ -17,8 +17,8 @@
   </node> 
 
 
-  <rosparam command="load" file="$(find cross_sensor_calibration)/conf/cross_sensor_calibration.yaml" />
-  <node pkg="cross_sensor_calibration" type="find_velodyne_points" name="find_velodyne_points" output="screen">
+  <rosparam command="load" file="$(find lidar_camera_calibration)/conf/lidar_camera_calibration.yaml" />
+  <node pkg="lidar_camera_calibration" type="find_transform" name="find_transform" output="screen">
   </node>
 </launch>
 

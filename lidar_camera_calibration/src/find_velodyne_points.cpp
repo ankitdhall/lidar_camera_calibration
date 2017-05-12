@@ -27,9 +27,9 @@
 #include <pcl/common/transforms.h>
 #include <pcl/filters/passthrough.h>
 
-#include "cross_sensor_calibration/Corners.h"
-#include "cross_sensor_calibration/PreprocessUtils.h"
-#include "cross_sensor_calibration/Find_RT.h"
+#include "lidar_camera_calibration/Corners.h"
+#include "lidar_camera_calibration/PreprocessUtils.h"
+#include "lidar_camera_calibration/Find_RT.h"
 
 using namespace cv;
 using namespace std;
@@ -114,7 +114,7 @@ void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
 int main(int argc, char** argv)
 {
 	readConfig();
-	ros::init(argc, argv, "find_velodyne_points");
+	ros::init(argc, argv, "find_transform");
 
 	
 
@@ -123,8 +123,8 @@ int main(int argc, char** argv)
 	if(config.useCameraInfo)
 	{
 		ROS_INFO_STREAM("Reading CameraInfo from topic");
-		n.getParam("/cross_sensor_calibration/camera_info_topic", CAMERA_INFO_TOPIC);
-		n.getParam("/cross_sensor_calibration/velodyne_topic", VELODYNE_TOPIC);
+		n.getParam("/lidar_camera_calibration/camera_info_topic", CAMERA_INFO_TOPIC);
+		n.getParam("/lidar_camera_calibration/velodyne_topic", VELODYNE_TOPIC);
 
 		message_filters::Subscriber<sensor_msgs::CameraInfo> info_sub(n, CAMERA_INFO_TOPIC, 1);
 		message_filters::Subscriber<sensor_msgs::PointCloud2> cloud_sub(n, VELODYNE_TOPIC, 1);
@@ -138,7 +138,7 @@ int main(int argc, char** argv)
 	else
 	{
 		ROS_INFO_STREAM("Reading CameraInfo from configuration file");
-  		n.getParam("/cross_sensor_calibration/velodyne_topic", VELODYNE_TOPIC);
+  		n.getParam("/lidar_camera_calibration/velodyne_topic", VELODYNE_TOPIC);
 		ros::Subscriber sub = n.subscribe(VELODYNE_TOPIC, 1000, callback_noCam);
 		ros::spin();
 	}

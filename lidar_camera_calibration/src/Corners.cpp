@@ -22,7 +22,7 @@
 #include <pcl/common/intersections.h>
 
 
-#include "cross_sensor_calibration/Utils.h"
+#include "lidar_camera_calibration/Utils.h"
 
 
 
@@ -114,7 +114,7 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 	cv::namedWindow("polygon", cv::WINDOW_NORMAL); 
 	//cv::namedWindow("combined", cv::WINDOW_NORMAL); 
 
-	std::ofstream outfile("/home/rrc/catkin_ws/src/cross_sensor_calibration/conf/points.txt", std::ios_base::trunc);
+	std::ofstream outfile("/home/rrc/catkin_ws/src/lidar_camera_calibration/conf/points.txt", std::ios_base::trunc);
 	outfile << QUADS*4 << "\n";
 
 	for(int q=0; q<QUADS; q++)
