@@ -23,9 +23,6 @@ Prerequisites:
 ROS package for the camera and LiDAR you wish to calibrate.  
 
 Clone this repository to your machine.  
-
-Make sure the correct path (pointing to the `lidar_camera_calibration/conf` folder) are given in `src/Corners.cpp`  `include/lidar_camera_calibration/PreprocessUtils.h` and `include/lidar_camera_calibration/Find_RT.h` so that config files can be read and processed data file written properly.
-
 Put the three folders in `path/to/your/ros/workspace/src` and run `catkin_make`.
 
 ## Getting Started
