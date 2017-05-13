@@ -2,9 +2,11 @@
 
 ![alt text](images/pcl.png "Pointcloud of the setup")
 
-The package was used to calibrate a Velodyne VLP-16 LiDAR with a ZED Stereo camera. Point Gray Blackfly was also calibrated against VLP-16. Since, VLP-16 provides only 16 rings, we believe that the higher models of the Velodyne will also work well with this package.
+The package is used to calibrate a Velodyne LiDAR with a camera. Specficially, Point Gray Blackfly and ZED camera have been successfully calibrated against Velodyne VLP-16 using `lidar_camera_calibration`. Since, VLP-16 provides only 16 rings, we believe that the higher models of the Velodyne will also work well with this package.
 
-The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependencies, both of which are available on this repository itself.
+The package finds a rotation and translation that transform all the points in the LiDAR frame to the (monocular) camera frame.
+
+The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependencies, both of which are available in the `dependencies` folder in this repository.
 
 
 ## Contents
@@ -23,7 +25,11 @@ Prerequisites:
 ROS package for the camera and LiDAR you wish to calibrate.  
 
 Clone this repository to your machine.  
-Put the three folders in `path/to/your/ros/workspace/src` and run `catkin_make`.
+Put the cloned repository, `dependencies/aruco_ros` and `dependencies/aruco_mapping` folders in `path/to/your/ros/workspace/src` and run `catkin_make`.
+
+Please note that `aruco_mapping` in the `dependencies` folder is a slightly modified version of the original [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping), so make sure that you use the one provided here.
+
+Camera parameters will also be required by the package, so it is advised that you calibrate the camera beforehand.
 
 ## Getting Started
 
