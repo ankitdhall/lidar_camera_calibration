@@ -113,6 +113,9 @@ private:
   /** \brief Publisher of aruco_mapping::ArucoMarker custom message*/
   ros::Publisher marker_msg_pub_;
 
+  /** \brief Publisher of std::vector<double> message for tvec and rvec for lidar_camera_calibration*/
+  ros::Publisher lidar_camera_calibration_rt;
+
   /** \brief Compute TF from marker detector result*/
   tf::Transform arucoMarker2Tf(const aruco::Marker &marker);
 

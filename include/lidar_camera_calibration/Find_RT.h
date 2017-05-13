@@ -143,11 +143,11 @@ Vector3d convert_to_vec(std::vector<std::string> str)
 	return retval;
 }
 
-void readArucoPose()
+void readArucoPose(std::vector<float> marker_info)
 {
 	std::vector<Matrix4d> marker_pose;
 
-	std::ifstream infile(pkg_loc + "/conf/transform.txt");
+	/*std::ifstream infile(pkg_loc + "/conf/transform.txt");
 
 	std::string line;    
 	while (std::getline(infile, line))
@@ -189,9 +189,48 @@ void readArucoPose()
 	}
 
 	infile.close();
+*/
+	int j=0;
+	for(int i = 0; i < marker_info.size()/7; i++)
+	{
+
+		std::cout << "In readArucoPose(): " << std::endl;
+		
+		//std::cout << t3 << " -- " << r3 << std::endl;
+
+		Vector3d trans, rot;
+		int marker_id = marker_info[j++];
+		trans(0) = marker_info[j++];
+		trans(1) = marker_info[j++];
+		trans(2) = marker_info[j++];
+		rot(0) = marker_info[j++];
+		rot(1) = marker_info[j++];
+		rot(2) = marker_info[j++];
+
+		std::cout << "\n" << "Marker id:" << marker_id << "\n" << trans << "\n" << rot << std::endl;
+
+		
+		Transform<double,3,Affine> aa;
+		aa = AngleAxis<double>(rot.norm(), rot/rot.norm());
+
+		Matrix4d g;
+		g.setIdentity(4,4);
+		//std::cout << "Rot matrix is: \n" << aa*g << std::endl;
+		g = aa*g;
+
+		Matrix4d T;
+		T.setIdentity(4,4);
+		T.topLeftCorner(3, 3) = g.topLeftCorner(3,3);//.transpose();
+		T.col(3).head(3) = trans;
+
+		marker_pose.push_back(T);
+
+		std::cout << "transformation matrix is: \n" << T << std::endl;
+	}
+
 
 	//std::vector<std::vector<std::pair<float, float> > > marker_coordinates;
-	infile.open(pkg_loc + "/conf/marker_coordinates.txt");
+	std::ifstream infile(pkg_loc + "/conf/marker_coordinates.txt");
 	std::ofstream outfile(pkg_loc + "/conf/points.txt", std::ios_base::app);
 
 	int num_of_markers;
@@ -248,9 +287,9 @@ void readArucoPose()
 }
 
 
-void find_transformation()
+void find_transformation(std::vector<float> marker_info)
 {
-	readArucoPose();
+	readArucoPose(marker_info);
 	std::pair<MatrixXd, MatrixXd> point_clouds = readArray();
 	Matrix4d T = calc_RT(point_clouds.first, point_clouds.second);
 }

@@ -31,6 +31,8 @@
 #include "lidar_camera_calibration/PreprocessUtils.h"
 #include "lidar_camera_calibration/Find_RT.h"
 
+#include "lidar_camera_calibration/marker_6dof.h"
+
 using namespace cv;
 using namespace std;
 using namespace ros;
@@ -48,9 +50,11 @@ Mat frame_rgb;
 pcl::PointCloud<myPointXYZRID> point_cloud;
 
 
-void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc)
+void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc,
+					const lidar_camera_calibration::marker_6dof::ConstPtr& msg_rt)
 {
 	ROS_INFO_STREAM("Velodyne scan received at " << msg_pc->header.stamp.toSec());
+	ROS_INFO_STREAM("marker_6dof received at " << msg_rt->header.stamp.toSec());
 
 	// Loading Velodyne point cloud_sub
 	fromROSMsg(*msg_pc, point_cloud);
@@ -64,18 +68,29 @@ void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc)
 	cv::Mat temp_mat(config.s, CV_8UC3);
 	pcl::PointCloud<pcl::PointXYZ> retval = *(toPointsXYZ(point_cloud));
 
+	std::vector<float> marker_info;
+
+	for(std::vector<float>::const_iterator it = msg_rt->dof.data.begin(); it != msg_rt->dof.data.end(); ++it)
+	{
+		marker_info.push_back(*it);
+		std::cout << *it << " ";
+	}
+	std::cout << "\n";
+
 	getCorners(temp_mat, retval, config.P, config.num_of_markers);
-	find_transformation();
+	find_transformation(marker_info);
 	ros::shutdown();
 }
 
 void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
-			  const sensor_msgs::PointCloud2ConstPtr& msg_pc)
+			  const sensor_msgs::PointCloud2ConstPtr& msg_pc,
+			  const lidar_camera_calibration::marker_6dof::ConstPtr& msg_rt)
 {
 
 	//ROS_INFO_STREAM("Image received at " << msg_img->header.stamp.toSec());
 	ROS_INFO_STREAM("Camera info received at " << msg_info->header.stamp.toSec());
 	ROS_INFO_STREAM("Velodyne scan received at " << msg_pc->header.stamp.toSec());
+	ROS_INFO_STREAM("marker_6dof received at " << msg_rt->header.stamp.toSec());
 
 	// Loading camera image:
 	//cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(msg_img, sensor_msgs::image_encodings::BGR8);
@@ -105,8 +120,17 @@ void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
 	cv::Mat temp_mat(config.s, CV_8UC3);
 	pcl::PointCloud<pcl::PointXYZ> retval = *(toPointsXYZ(point_cloud));
 
+	std::vector<float> marker_info;
+
+	for(std::vector<float>::const_iterator it = msg_rt->dof.data.begin(); it != msg_rt->dof.data.end(); ++it)
+	{
+		marker_info.push_back(*it);
+		std::cout << *it << " ";
+	}
+	std::cout << "\n";
+
 	getCorners(temp_mat, retval, projection_matrix, config.num_of_markers);
-	find_transformation();
+	find_transformation(marker_info);
 	ros::shutdown();
 }
 
@@ -128,10 +152,13 @@ int main(int argc, char** argv)
 
 		message_filters::Subscriber<sensor_msgs::CameraInfo> info_sub(n, CAMERA_INFO_TOPIC, 1);
 		message_filters::Subscriber<sensor_msgs::PointCloud2> cloud_sub(n, VELODYNE_TOPIC, 1);
+		message_filters::Subscriber<lidar_camera_calibration::marker_6dof> rt_sub(n, "lidar_camera_calibration_rt", 1);
 
-		typedef sync_policies::ApproximateTime<sensor_msgs::CameraInfo, sensor_msgs::PointCloud2> MySyncPolicy;
-		Synchronizer<MySyncPolicy> sync(MySyncPolicy(10), info_sub, cloud_sub);
-		sync.registerCallback(boost::bind(&callback, _1, _2));
+		std::cout << "done1\n";
+
+		typedef sync_policies::ApproximateTime<sensor_msgs::CameraInfo, sensor_msgs::PointCloud2, lidar_camera_calibration::marker_6dof> MySyncPolicy;
+		Synchronizer<MySyncPolicy> sync(MySyncPolicy(10), info_sub, cloud_sub, rt_sub);
+		sync.registerCallback(boost::bind(&callback, _1, _2, _3));
 
 		ros::spin();
 	}
@@ -139,7 +166,14 @@ int main(int argc, char** argv)
 	{
 		ROS_INFO_STREAM("Reading CameraInfo from configuration file");
   		n.getParam("/lidar_camera_calibration/velodyne_topic", VELODYNE_TOPIC);
-		ros::Subscriber sub = n.subscribe(VELODYNE_TOPIC, 1000, callback_noCam);
+
+		message_filters::Subscriber<sensor_msgs::PointCloud2> cloud_sub(n, VELODYNE_TOPIC, 1);
+		message_filters::Subscriber<lidar_camera_calibration::marker_6dof> rt_sub(n, "lidar_camera_calibration_rt", 1);
+
+		typedef sync_policies::ApproximateTime<sensor_msgs::PointCloud2, lidar_camera_calibration::marker_6dof> MySyncPolicy;
+		Synchronizer<MySyncPolicy> sync(MySyncPolicy(10), cloud_sub, rt_sub);
+		sync.registerCallback(boost::bind(&callback_noCam, _1, _2));
+
 		ros::spin();
 	}
 

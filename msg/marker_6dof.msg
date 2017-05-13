@@ -1,0 +1,3 @@
+std_msgs/Header header
+int32 num_of_markers
+std_msgs/Float32MultiArray dof

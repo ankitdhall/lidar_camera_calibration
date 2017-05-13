@@ -4,7 +4,7 @@
   
 
   <!-- ArUco mapping -->
-  <node pkg="aruco_mapping" type="aruco_mapping" name="aruco_mapping" output="screen">
+ <!--  <node pkg="aruco_mapping" type="aruco_mapping" name="aruco_mapping" output="screen">
     <remap from="/image_raw" to="/frontNear/left/image_raw"/>
 
     <param name="calibration_file" type="string" value="$(find aruco_mapping)/data/zed_left_uurmi.ini" /> 
@@ -14,7 +14,7 @@
     <param name="roi_allowed" type="bool" value="false" />
 
 
-  </node> 
+  </node>  -->
 
 
   <rosparam command="load" file="$(find lidar_camera_calibration)/conf/lidar_camera_calibration.yaml" />

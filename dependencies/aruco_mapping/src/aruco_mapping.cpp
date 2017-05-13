@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define ARUCO_MAPPING_CPP
 
 #include <aruco_mapping.h>
+#include "lidar_camera_calibration/marker_6dof.h"
 
 namespace aruco_mapping
 {
@@ -86,7 +87,8 @@ ArucoMapping::ArucoMapping(ros::NodeHandle *nh) :
   //ROS publishers
   marker_msg_pub_           = nh->advertise<aruco_mapping::ArucoMarker>("aruco_poses",1);
   marker_visualization_pub_ = nh->advertise<visualization_msgs::Marker>("aruco_markers",1);
-          
+  lidar_camera_calibration_rt = nh->advertise< lidar_camera_calibration::marker_6dof >("lidar_camera_calibration_rt",1);
+
   //Parse data from calibration file
   parseCalibrationFile(calib_filename_);
 
@@ -182,8 +184,9 @@ ArucoMapping::imageCallback(const sensor_msgs::ImageConstPtr &original_image)
   
   // Show image
   cv::imshow("Mono8", I);
-  cv::waitKey(2000);
-  ros::shutdown();
+  cv::waitKey(10);
+  /*cv::waitKey(2000);
+  ros::shutdown();*/
 }
 
 
@@ -283,6 +286,14 @@ ArucoMapping::processImage(cv::Mat input_image,cv::Mat output_image)
   //------------------------------------------------------
   std::string pkg_loc = ros::package::getPath("lidar_camera_calibration") + "/conf/transform.txt";
   std::ofstream outfile(pkg_loc.c_str(), std::ios_base::trunc);
+
+  lidar_camera_calibration::marker_6dof marker_r_and_t;
+
+  marker_r_and_t.header.stamp = ros::Time::now();
+  marker_r_and_t.dof.data.clear();
+
+  marker_r_and_t.num_of_markers = temp_markers.size();
+
   for(size_t i = 0; i < temp_markers.size();i++)
   {
     int index;
@@ -333,6 +344,14 @@ ArucoMapping::processImage(cv::Mat input_image,cv::Mat output_image)
     if((index < marker_counter_) && (first_marker_detected_ == true))
     {
       outfile << temp_markers[i] << "\n";
+      marker_r_and_t.dof.data.push_back( temp_markers[i].id ); 
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Tvec.ptr<float>(0)[0] );
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Tvec.ptr<float>(0)[1] );
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Tvec.ptr<float>(0)[2] );
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Rvec.ptr<float>(0)[0] );
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Rvec.ptr<float>(0)[1] );
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Rvec.ptr<float>(0)[2] );
+
       markers_[index].current_camera_tf = arucoMarker2Tf(temp_markers[i]);
       markers_[index].current_camera_tf = markers_[index].current_camera_tf.inverse();
 
@@ -354,6 +373,14 @@ ArucoMapping::processImage(cv::Mat input_image,cv::Mat output_image)
     if((index == marker_counter_) && (first_marker_detected_ == true))
     {
       outfile << temp_markers[i] << "\n";
+      marker_r_and_t.dof.data.push_back( temp_markers[i].id ); 
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Tvec.ptr<float>(0)[0] );
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Tvec.ptr<float>(0)[1] );
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Tvec.ptr<float>(0)[2] );
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Rvec.ptr<float>(0)[0] );
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Rvec.ptr<float>(0)[1] );
+      marker_r_and_t.dof.data.push_back( temp_markers[i].Rvec.ptr<float>(0)[2] );
+
       markers_[index].current_camera_tf=arucoMarker2Tf(temp_markers[i]);
 
       tf::Vector3 marker_origin = markers_[index].current_camera_tf.getOrigin();
@@ -521,6 +548,8 @@ ArucoMapping::processImage(cv::Mat input_image,cv::Mat output_image)
     }
   }
   outfile.close();
+  lidar_camera_calibration_rt.publish(marker_r_and_t);
+  marker_r_and_t.dof.data.clear();
   //------------------------------------------------------
   // Compute which of visible markers is the closest to the camera
   //------------------------------------------------------
