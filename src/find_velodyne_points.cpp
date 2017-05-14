@@ -79,7 +79,7 @@ void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc,
 
 	getCorners(temp_mat, retval, config.P, config.num_of_markers);
 	find_transformation(marker_info);
-	ros::shutdown();
+	//ros::shutdown();
 }
 
 void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
@@ -131,7 +131,7 @@ void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
 
 	getCorners(temp_mat, retval, projection_matrix, config.num_of_markers);
 	find_transformation(marker_info);
-	ros::shutdown();
+	//ros::shutdown();
 }
 
 

@@ -15,6 +15,11 @@ using namespace Eigen;
 
 std::string pkg_loc = ros::package::getPath("lidar_camera_calibration");
 
+Eigen::Vector3d translation_sum;
+
+int iteration_counter=0;
+int MAX_ITERS = 5;
+
 std::pair<MatrixXd, MatrixXd> readArray()
 {
 	std::ifstream infile(pkg_loc + "/conf/points.txt");
@@ -47,6 +52,10 @@ std::pair<MatrixXd, MatrixXd> readArray()
 // calculates rotation and translation that transforms points in the lidar frame to the camera frame
 Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera)
 {
+	if(iteration_counter == 0)
+	{
+		translation_sum << 0.0, 0.0, 0.0;
+	}
 	int num_points = lidar.cols();
 	std::cout << "Number of points: " << num_points << std::endl;
 	Vector3d mu_lidar, mu_camera;
@@ -97,6 +106,7 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera)
 	
 	Vector3d translation = mu_camera - rotation*mu_lidar;
 
+	translation_sum += translation;
 
 	Vector3d ea = rotation.eulerAngles(2, 1, 0);
 
@@ -114,6 +124,12 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera)
 	T.col(3).head(3) = translation;
 
 	std::cout << "Rigid-body transformation: \n" << T << std::endl;
+
+	iteration_counter++;
+	if(iteration_counter == MAX_ITERS)
+	{
+		std::cout << "Average translation is:" << translation_sum/MAX_ITERS << "\n";
+	}
 	return T;
 }
 
