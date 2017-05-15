@@ -25,7 +25,7 @@
 #include "lidar_camera_calibration/Utils.h"
 
 int iteration_count = 0;
-int MAX_ITER = 5;
+int MAX_ITER = 100;
 std::vector< std::vector<cv::Point> > stored_corners;
 
 void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int num_of_markers)
