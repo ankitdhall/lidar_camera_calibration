@@ -163,6 +163,6 @@ The points are ordered according to their correspondences, i.e. the second point
 
 ## Future improvements
 
-- [x] iterative process with weighted average over multiple runs
+- [x] iterative process with ~~weighted~~ average over multiple runs
 - [ ] automate process of marking line-segments
 

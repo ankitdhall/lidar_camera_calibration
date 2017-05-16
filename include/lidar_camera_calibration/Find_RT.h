@@ -19,6 +19,7 @@ Eigen::Vector3d translation_sum;
 Eigen::Quaterniond rotation_sum;
 
 Eigen::Matrix3d rotation_avg_by_mult;
+float rmse_avg;
 
 int iteration_counter=0;
 
@@ -73,11 +74,15 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 {
 	if(iteration_counter == 0)
 	{
+		ofstream::clean_file(pkg_loc + "/log/avg_values.txt", std::ios_base::trunc);
+		clean_file.close();
+
 		translation_sum << 0.0, 0.0, 0.0; 
 		rotation_sum = Quaterniond(0.0, 0.0, 0.0, 0.0);
 		rotation_avg_by_mult << 1.0, 0.0, 0.0, 
 								0.0, 1.0, 0.0, 
 								0.0, 0.0, 1.0;
+		rmse_avg = 0.0;
 	}
 	int num_points = lidar.cols();
 	std::cout << "Number of points: " << num_points << std::endl;
@@ -153,6 +158,8 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 	double error = sqrt(eltwise_error.sum()/num_points);
 	std::cout << "RMSE: " << error << std::endl;
 
+	rmse_avg = rmse_avg + error;
+
 	Matrix4d T;
 	T.setIdentity(4,4);
 	T.topLeftCorner(3, 3) = rotation;
@@ -163,6 +170,9 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 	iteration_counter++;
 	if(iteration_counter == MAX_ITERS)
 	{
+		std::cout << "--------------------------------------------------------------------\n";
+		std::cout << "After " << MAX_ITERS << " iterations\n";
+		std::cout << "--------------------------------------------------------------------\n";
 		std::cout << "Average translation is:" << "\n" << translation_sum/MAX_ITERS << "\n";
 
 		rotation_sum.x() = rotation_sum.x()/MAX_ITERS;
@@ -180,8 +190,40 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 
 		Eigen::Matrix3d rotation_avg = rotation_sum.toRotationMatrix();
 		std::cout << "Average rotation is:" << "\n" << rotation_avg << "\n";
-		std::cout << "Average rotation by multiplication is:" << "\n" << rotation_avg_by_mult << "\n";
-	}
+		//std::cout << "Average rotation by multiplication is:" << "\n" << rotation_avg_by_mult << "\n";
+
+		std::cout << "Average RMSE error is: " <<  rmse_avg*1.0/MAX_ITERS << "\n";
+ 	}
+
+ 	//writing files to generate plots
+ 	
+ 	if(iteration_counter%1 == 0)
+	{
+		ofstream::log_avg_values(pkg_loc + "/log/avg_values.txt", std::ios_base::app);
+
+		log_avg_values << iteration_counter << "\n";
+		log_avg_values << translation_sum/iteration_counter << "\n";
+
+		double mag = rotation_sum.x()*rotation_sum.x() +
+					 rotation_sum.y()*rotation_sum.y() +
+					 rotation_sum.z()*rotation_sum.z() +
+					 rotation_sum.w()*rotation_sum.w();
+
+		Eigen::Quaterniond rot_temp_sum;
+		rot_temp_sum.x() = rotation_sum.x()/(mag*iteration_counter);
+		rot_temp_sum.y() = rotation_sum.y()/(mag*iteration_counter);
+		rot_temp_sum.z() = rotation_sum.z()/(mag*iteration_counter);
+		rot_temp_sum.w() = rotation_sum.w()/(mag*iteration_counter);
+		
+		Eigen::Matrix3d rotation_avg = rot_temp_sum.toRotationMatrix();
+		log_avg_values << rotation_avg << "\n";
+
+		log_avg_values << rmse_avg*1.0/iteration_counter << "\n";
+		log_avg_values.close();
+ 	}
+ 	
+
+
 	return T; 
 }
 
