@@ -74,7 +74,7 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 {
 	if(iteration_counter == 0)
 	{
-		ofstream::clean_file(pkg_loc + "/log/avg_values.txt", std::ios_base::trunc);
+		std::ofstream clean_file(pkg_loc + "/log/avg_values.txt", std::ios_base::trunc);
 		clean_file.close();
 
 		translation_sum << 0.0, 0.0, 0.0; 
@@ -199,7 +199,7 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
  	
  	if(iteration_counter%1 == 0)
 	{
-		ofstream::log_avg_values(pkg_loc + "/log/avg_values.txt", std::ios_base::app);
+		std::ofstream log_avg_values(pkg_loc + "/log/avg_values.txt", std::ios_base::app);
 
 		log_avg_values << iteration_counter << "\n";
 		log_avg_values << translation_sum/iteration_counter << "\n";
