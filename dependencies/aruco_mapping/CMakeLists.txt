@@ -12,7 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
              tf
              aruco
              visualization_msgs
-             camera_calibration_parsers)
+             camera_calibration_parsers
+             lidar_camera_calibration)
 
 include_directories(${catkin_INCLUDE_DIRS}
                     ${PROJECT_SOURCE_DIR}/include/)

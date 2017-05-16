@@ -24,12 +24,14 @@
 
 #include "lidar_camera_calibration/Utils.h"
 
-
-
+int iteration_count = 0;
+int MAX_ITER = 100;
+std::vector< std::vector<cv::Point> > stored_corners;
 
 void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int num_of_markers)
 {
 
+	ROS_INFO_STREAM("iteration number: " << iteration_count << "\n");
 	cv::Mat img_cv = computeEdgeImage(img);
 
 	/*Masking happens here */
@@ -100,6 +102,7 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 	}*/
 
 	/* get region of interest */
+
 	const int QUADS=num_of_markers;
 	std::vector<int> LINE_SEGMENTS(QUADS, 4); //assuming each has 4 edges and 4 corners
 
@@ -127,20 +130,26 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 			std::vector<cv::Point> polygon;
 			int collected;
 
-			polygon.clear();
-			collected = 0;
-			while(collected != LINE_SEGMENTS[q])
+			// get markings in the first iteration only
+			if(iteration_count == 0)
 			{
-				
-					cv::setMouseCallback("cloud", onMouse, &_point_);
+				polygon.clear();
+				collected = 0;
+				while(collected != LINE_SEGMENTS[q])
+				{
 					
-					cv::imshow("cloud", image_edge_laser);
-					cv::waitKey(0);
-					++collected;
-					//std::cout << _point_.x << " " << _point_.y << "\n";
-					polygon.push_back(_point_);
+						cv::setMouseCallback("cloud", onMouse, &_point_);
+						
+						cv::imshow("cloud", image_edge_laser);
+						cv::waitKey(0);
+						++collected;
+						//std::cout << _point_.x << " " << _point_.y << "\n";
+						polygon.push_back(_point_);
+				}
+				stored_corners.push_back(polygon);
 			}
-
+			
+			polygon = stored_corners[4*q+i];
 
 			cv::Mat polygon_image = cv::Mat::zeros(image_edge_laser.size(), CV_8UC1);
 			
@@ -232,6 +241,12 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 
 	}
 	outfile.close();
+
+	iteration_count++;
+	if(iteration_count == MAX_ITER)
+	{
+		ros::shutdown();
+	}
 	/* store point cloud with intersection points */
 	//pcl::io::savePCDFileASCII("/home/vishnu/RANSAC_marker.pcd", *marker);
 	//pcl::io::savePCDFileASCII("/home/vishnu/RANSAC_corners.pcd", *board_corners);
