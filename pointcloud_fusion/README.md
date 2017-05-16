@@ -28,3 +28,11 @@ If you encounted an error, something that looks like this,
 >CMake Error: The current CMakeCache.txt directory /home/user-name/lidar_camera_calibration/pointcloud_fusion/build/CMakeCache.txt is different than the directory /home/user-name-2/lidar_camera_calibration/pointcloud_fusion/build/CMakeCache.txt where CMakeCache.txt was created. This may result in binaries being created in the wrong place. If you are not sure, reedit the CMakeCache.txt
 
 then, delete the CMakeCache.txt and compile the program.
+
+Run  
+```shell
+./fusion
+```
+to fuse the point clouds.  
+
+The fused point cloud will be saved in `pointcloud_fusion/data` as `final_cloud.pcd` and can be viewed using `pcl_viewer`.

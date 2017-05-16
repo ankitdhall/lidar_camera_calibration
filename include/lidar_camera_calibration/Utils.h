@@ -21,38 +21,6 @@
 #include <pcl/sample_consensus/sac_model_line.h>
 #include <pcl/common/intersections.h>
 
-
-cv::Mat computeEdgeImage(cv::Mat img)
-{
-
-	cv::Mat grayImg;
-	if (img.channels() > 1)
-	{
-	grayImg = cv::Mat(img.size(), CV_8UC1);
-	cv::cvtColor(img, grayImg, CV_BGR2GRAY);
-	}
-	else
-	{
-	img.copyTo(grayImg);
-	}
-
-	cv::Mat edges;
-	cv::Mat grad_x, grad_y;
-	cv::Mat abs_grad_x, abs_grad_y;
-	/// Gradient X
-	cv::Sobel(grayImg, grad_x, CV_16S, 1, 0, 3);
-	cv::convertScaleAbs(grad_x, abs_grad_x);
-
-	/// Gradient Y
-	cv::Sobel(grayImg, grad_y, CV_16S, 0, 1, 3);
-	cv::convertScaleAbs(grad_y, abs_grad_y);
-
-	/// Total Gradient (approximate)
-	cv::addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, edges);
-	return edges;
-}
-
-
 cv::Point project(const pcl::PointXYZ &pt, const cv::Mat &projection_matrix)
 {
 	//cv::Point2f xy = projectf(pt, projection_matrix);
@@ -61,7 +29,7 @@ cv::Point project(const pcl::PointXYZ &pt, const cv::Mat &projection_matrix)
 	pt_3D.at<float>(0) = pt.x;
 	pt_3D.at<float>(1) = pt.y;
 	pt_3D.at<float>(2) = pt.z;
-	pt_3D.at<float>(3) = 1.0f; // is homogenious coords. the point's 4. coord is 1
+	pt_3D.at<float>(3) = 1.0f;
 
 	cv::Mat pt_2D = projection_matrix * pt_3D;
 
@@ -101,8 +69,6 @@ cv::Mat project(cv::Mat projection_matrix, cv::Rect frame, pcl::PointCloud<pcl::
 	cv::Mat plane_gray;
 	cv::normalize(plane, plane_gray, 0, 255, cv::NORM_MINMAX, CV_8UC1);
 	cv::dilate(plane_gray, plane_gray, cv::Mat());
-	//Image::Image plane_img(plane_gray);
-	//return plane_img.computeIDTEdgeImage();
 
 	return plane_gray;
 }

@@ -21,7 +21,6 @@ Eigen::Quaterniond rotation_sum;
 Eigen::Matrix3d rotation_avg_by_mult;
 
 int iteration_counter=0;
-int MAX_ITERS = 100;
 
 Eigen::Quaterniond addQ(Eigen::Quaterniond a, Eigen::Quaterniond b)
 {
@@ -70,7 +69,7 @@ std::pair<MatrixXd, MatrixXd> readArray()
 }
 
 // calculates rotation and translation that transforms points in the lidar frame to the camera frame
-Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera)
+Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 {
 	if(iteration_counter == 0)
 	{
@@ -216,49 +215,6 @@ void readArucoPose(std::vector<float> marker_info)
 {
 	std::vector<Matrix4d> marker_pose;
 
-	/*std::ifstream infile(pkg_loc + "/conf/transform.txt");
-
-	std::string line;    
-	while (std::getline(infile, line))
-	{
-
-		std::cout << "In readArucoPose(): " << line << std::endl;
-		std::size_t pos_t = line.find("Txyz");
-		std::size_t pos_r = line.find("Rxyz");
-
-		std::string t3, r3;
-		t3 = line.substr(pos_t+5, pos_r-pos_t-5);
-		r3 = line.substr(pos_r+5, line.length());
-
-		std::cout << t3 << " -- " << r3 << std::endl;
-
-		Vector3d trans, rot;
-		trans = convert_to_vec(split_by_space(t3));
-		rot = convert_to_vec(split_by_space(r3));
-
-		std::cout << "\n" << trans << "\n" << rot << std::endl;
-
-		
-		Transform<double,3,Affine> aa;
-		aa = AngleAxis<double>(rot.norm(), rot/rot.norm());
-
-		Matrix4d g;
-		g.setIdentity(4,4);
-		//std::cout << "Rot matrix is: \n" << aa*g << std::endl;
-		g = aa*g;
-
-		Matrix4d T;
-		T.setIdentity(4,4);
-		T.topLeftCorner(3, 3) = g.topLeftCorner(3,3);//.transpose();
-		T.col(3).head(3) = trans;
-
-		marker_pose.push_back(T);
-
-		std::cout << "transformation matrix is: \n" << T << std::endl;
-	}
-
-	infile.close();
-*/
 	int j=0;
 	for(int i = 0; i < marker_info.size()/7; i++)
 	{
@@ -354,9 +310,9 @@ void readArucoPose(std::vector<float> marker_info)
 }
 
 
-void find_transformation(std::vector<float> marker_info)
+void find_transformation(std::vector<float> marker_info, int MAX_ITERS)
 {
 	readArucoPose(marker_info);
 	std::pair<MatrixXd, MatrixXd> point_clouds = readArray();
-	Matrix4d T = calc_RT(point_clouds.first, point_clouds.second);
+	Matrix4d T = calc_RT(point_clouds.first, point_clouds.second, MAX_ITERS);
 }

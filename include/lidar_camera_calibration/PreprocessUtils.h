@@ -45,6 +45,7 @@ struct config_settings
 	int num_of_markers;
 	bool useCameraInfo;
 	cv::Mat P;
+	int MAX_ITERS;
 
 	void print()
 	{
@@ -56,6 +57,7 @@ struct config_settings
 		std::cout << "Number of markers: " << num_of_markers << std::endl;
 		std::cout << "Intensity threshold (between 0.0 and 1.0): " << intensity_thresh << "\nuseCameraInfo: " << useCameraInfo << "\n";
 		std::cout << "Projection matrix: \n" << P << "\n";
+		std::cout << "MAX_ITERS: " << MAX_ITERS << "\n";
 	}
 }config;
 
@@ -81,6 +83,8 @@ void readConfig()
 	}
 	cv::Mat(3, 4, CV_32FC1, &p).copyTo(config.P);
 
+	infile >> config.MAX_ITERS;
+	
 	infile.close();
 	config.print();
 }

@@ -25,20 +25,18 @@
 #include "lidar_camera_calibration/Utils.h"
 
 int iteration_count = 0;
-int MAX_ITER = 100;
 std::vector< std::vector<cv::Point> > stored_corners;
 
-void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int num_of_markers)
+void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int num_of_markers, int MAX_ITERS)
 {
 
 	ROS_INFO_STREAM("iteration number: " << iteration_count << "\n");
-	cv::Mat img_cv = computeEdgeImage(img);
 
 	/*Masking happens here */
-	cv::Mat edge_mask = cv::Mat::zeros(img_cv.size(), CV_8UC1);
+	cv::Mat edge_mask = cv::Mat::zeros(img.size(), CV_8UC1);
 	//edge_mask(cv::Rect(520, 205, 300, 250))=1;
 	edge_mask(cv::Rect(0, 0, 1280, 720))=1;
-	img_cv.copyTo(edge_mask, edge_mask);
+	img.copyTo(edge_mask, edge_mask);
 	//pcl::io::savePCDFileASCII ("/home/vishnu/final1.pcd", scan.point_cloud);
 
 	img = edge_mask;
@@ -243,7 +241,7 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 	outfile.close();
 
 	iteration_count++;
-	if(iteration_count == MAX_ITER)
+	if(iteration_count == MAX_ITERS)
 	{
 		ros::shutdown();
 	}

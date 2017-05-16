@@ -45,7 +45,6 @@ string VELODYNE_TOPIC;
 
 
 Mat projection_matrix;
-Mat frame_rgb;
 
 pcl::PointCloud<myPointXYZRID> point_cloud;
 
@@ -77,8 +76,8 @@ void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc,
 	}
 	std::cout << "\n";
 
-	getCorners(temp_mat, retval, config.P, config.num_of_markers);
-	find_transformation(marker_info);
+	getCorners(temp_mat, retval, config.P, config.num_of_markers, config.MAX_ITERS);
+	find_transformation(marker_info, config.MAX_ITERS);
 	//ros::shutdown();
 }
 
@@ -87,16 +86,10 @@ void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
 			  const lidar_camera_calibration::marker_6dof::ConstPtr& msg_rt)
 {
 
-	//ROS_INFO_STREAM("Image received at " << msg_img->header.stamp.toSec());
 	ROS_INFO_STREAM("Camera info received at " << msg_info->header.stamp.toSec());
 	ROS_INFO_STREAM("Velodyne scan received at " << msg_pc->header.stamp.toSec());
 	ROS_INFO_STREAM("marker_6dof received at " << msg_rt->header.stamp.toSec());
 
-	// Loading camera image:
-	//cv_bridge::CvImagePtr cv_ptr = cv_bridge::toCvCopy(msg_img, sensor_msgs::image_encodings::BGR8);
-	//frame_rgb = cv_ptr->image;
-
-	// Loading projection matrix:
 	float p[12];
 	float *pp = p;
 	for (boost::array<double, 12ul>::const_iterator i = msg_info->P.begin(); i != msg_info->P.end(); i++)
@@ -129,8 +122,8 @@ void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
 	}
 	std::cout << "\n";
 
-	getCorners(temp_mat, retval, projection_matrix, config.num_of_markers);
-	find_transformation(marker_info);
+	getCorners(temp_mat, retval, projection_matrix, config.num_of_markers, config.MAX_ITERS);
+	find_transformation(marker_info, config.MAX_ITERS);
 	//ros::shutdown();
 }
 
