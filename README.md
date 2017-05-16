@@ -9,6 +9,8 @@ The package finds a rotation and translation that transform all the points in th
 The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependencies, both of which are available in the `dependencies` folder in this repository.
 
 
+The `lidar_camera_calibration/pointcloud_fusion` provides a script to fuse point clouds obtained from two stereo cameras. Both of which were extrinsically calibrated using a LiDAR and `lidar_camera_calibration`. More details to follow.
+
 ## Contents
 1. [Setup](#setup)
 2. [Getting Started](#getting-started)
@@ -62,6 +64,7 @@ The file contains specifications about the following:
 >fx     0       cx      0  
 >0      fy      cy      0  
 >0      0       1       0 
+>MAX_ITERS
 
 `x-` and `x+`, `y-` and `y+`, `z-` and `z+` are used to remove unwanted points in the cloud and are specfied in meters. The filtred point cloud makes it easier to mark the board edges. The filtered pointcloud contains all points   
 (x, y, z) such that,  
@@ -72,6 +75,8 @@ z in [`z-`, `z+`]
 The `cloud_intensity_threshold` is used to filter points that have intensity lower than a specified value. The default value at which it works well is `0.05`. However, while marking, if there seem to be missing/less points on the cardboard edges, tweaking this value will might help.
 
 The `use_camera_info_topic?` is a boolean flag and takes values `1` or `0`. The `find_velodyne_points.launch` node uses camera parameters to process the points and display them for marking. If you wish to use the `camera_info` topic to read off the parameters, set this to `1`. Else, the explicitly provided camera parameters in `config_file.txt` are used.
+
+`MAX_ITERS` is the number of iterations, you wish to run. The current pipeline assumes that the experimental setup: the boards are almost stationary and the camera and the LiDAR are fixed. The node will ask the user to mark the line-segments (see the video tutorial on how to go about marking [Usage](#usage)) for the first iteration. Once, the line-segments for each board have been marked, the algorithm runs for `MAX_ITERS`, collecting live data and producing n=`MAX_ITERS` sets of rotation and translation in the form of 4x4 matrix. Since, the marking is only done initially, the quadrilaterals should be drawn large enough such that if in the iterations that follow the boards move slightly (say, due to a gentle breeze) the edge points still fall in their respective quadrilaterals. After running for `MAX_ITERS` number of times, the node outputs an average translation vector (3x1) and an average rotation matrix (3x3). Averaging the translation vector is trivial; the rotations matrices are converted to quaternions and averaged, then converted back to a 3x3 rotation matrix.
 
 ### marker_coordinates.txt
 
@@ -143,10 +148,7 @@ Line segments for each board are to be marked in clock-wise order starting from 
 
 After marking all the line-segments, the rigid-body transformation between the camera and the LiDAR frame will be displayed.
 
-Intermediate values are logged in `conf/transform.txt` and `conf/points.txt`.
-
-### transform.txt
-This contains the tranformation from each ArUco marker's center to the camera center. Different markers are identified by their `ArUco ids`. The transform is represented by 3x1 vectors, `tvec` and `rvec`. `tvec` is in meters while `rvec` follows axis-angle representation. This file is written by the slightly modified `aruco_mapping` node. This node runs initially and writes the tranform values, after which the pointcloud is presented to the user for marking.
+Intermediate values are logged in `conf/points.txt`.
 
 ### points.txt
 This contains `num_of_sensors*(num_of_markers*points_per_board)` 3D points, here, `num_of_sensors` is fixed to 2 and the `points_per_board`=4, the four corner points.  
@@ -161,5 +163,6 @@ The points are ordered according to their correspondences, i.e. the second point
 
 ## Future improvements
 
+- [x] iterative process with weighted average over multiple runs
 - [ ] automate process of marking line-segments
-- [ ] iterative process with weighted average over multiple runs
+
