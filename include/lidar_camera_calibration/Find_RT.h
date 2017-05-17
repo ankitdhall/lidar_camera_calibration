@@ -193,6 +193,10 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 		//std::cout << "Average rotation by multiplication is:" << "\n" << rotation_avg_by_mult << "\n";
 
 		std::cout << "Average RMSE error is: " <<  rmse_avg*1.0/MAX_ITERS << "\n";
+
+		MatrixXd eltwise_error = (camera - ((rotation_avg*lidar).colwise() + (translation_sum/MAX_ITERS))).array().square().colwise().sum();
+		double error = sqrt(eltwise_error.sum()/num_points);
+		std::cout << "RMSE: " << error << std::endl;
  	}
 
  	//writing files to generate plots
@@ -218,7 +222,12 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 		Eigen::Matrix3d rotation_avg = rot_temp_sum.toRotationMatrix();
 		log_avg_values << rotation_avg << "\n";
 
-		log_avg_values << rmse_avg*1.0/iteration_counter << "\n";
+		//log_avg_values << rmse_avg*1.0/iteration_counter << "\n";
+
+		MatrixXd eltwise_error = (camera - ((rotation_avg*lidar).colwise() + (translation_sum/iteration_counter))).array().square().colwise().sum();
+		double error = sqrt(eltwise_error.sum()/num_points);
+		log_avg_values << error << "\n";
+
 		log_avg_values.close();
  	}
  	
