@@ -35,7 +35,7 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 	/*Masking happens here */
 	cv::Mat edge_mask = cv::Mat::zeros(img.size(), CV_8UC1);
 	//edge_mask(cv::Rect(520, 205, 300, 250))=1;
-	edge_mask(cv::Rect(0, 0, 1280, 720))=1;
+	edge_mask(cv::Rect(0, 0, img.cols, img.rows))=1;
 	img.copyTo(edge_mask, edge_mask);
 	//pcl::io::savePCDFileASCII ("/home/vishnu/final1.pcd", scan.point_cloud);
 
@@ -46,11 +46,11 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 	pcl::PointCloud<pcl::PointXYZ> pc = scan;
 	//scan = Velodyne::Velodyne(filtered_pc);
 
-	cv::Rect frame(0, 0, 1280, 720);
+	cv::Rect frame(0, 0, img.cols, img.rows);
 	
 	//pcl::io::savePCDFileASCII("/home/vishnu/final2.pcd", scan.point_cloud);
 	
-	cv::Mat image_edge_laser = project(P, cv::Rect(0, 0, 1280, 720), scan, NULL);
+	cv::Mat image_edge_laser = project(P, frame, scan, NULL);
 	cv::threshold(image_edge_laser, image_edge_laser, 10, 255, 0);
 
 	
@@ -231,9 +231,17 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 		*board_corners += *corners;
 
 		std::cout << "Distance between the corners:\n";
-		for(int i=0; i<LINE_SEGMENTS[q]; i++)
+		for(int i=0; i<4; i++)
 		{
-			std::cout << sqrt(pow(c_3D[LINE_SEGMENTS[q]*q+i].x-c_3D[(LINE_SEGMENTS[q]*q+i+1)%LINE_SEGMENTS[q]].x, 2) + pow(c_3D[LINE_SEGMENTS[q]*q+i].y-c_3D[(LINE_SEGMENTS[q]*q+i+1)%LINE_SEGMENTS[q]].y, 2) + pow(c_3D[LINE_SEGMENTS[q]*q+i].z-c_3D[(LINE_SEGMENTS[q]*q+i+1)%LINE_SEGMENTS[q]].z, 2)) << std::endl;
+			std::cout << 
+
+						sqrt(
+						  pow(c_3D[4*q+i].x - c_3D[4*q+(i+1)%4].x, 2)
+						+ pow(c_3D[4*q+i].y - c_3D[4*q+(i+1)%4].y, 2)
+						+ pow(c_3D[4*q+i].z - c_3D[4*q+(i+1)%4].z, 2)
+						)
+
+						<< std::endl;
 		}
 
 
