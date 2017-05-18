@@ -168,21 +168,28 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 	std::cout << "Rigid-body transformation: \n" << T << std::endl;
 
 	iteration_counter++;
-	if(iteration_counter == MAX_ITERS)
+	//if(iteration_counter == MAX_ITERS)
+	if(iteration_counter%1 == 0)
 	{
-		std::cout << "--------------------------------------------------------------------\n";
-		std::cout << "After " << MAX_ITERS << " iterations\n";
-		std::cout << "--------------------------------------------------------------------\n";
-		std::cout << "Average translation is:" << "\n" << translation_sum/MAX_ITERS << "\n";
+		std::ofstream log_avg_values(pkg_loc + "/log/avg_values.txt", std::ios_base::app);
 
-		rotation_sum.x() = rotation_sum.x()/MAX_ITERS;
-		rotation_sum.y() = rotation_sum.y()/MAX_ITERS;
-		rotation_sum.z() = rotation_sum.z()/MAX_ITERS;
-		rotation_sum.w() = rotation_sum.w()/MAX_ITERS;
-		double mag = rotation_sum.x()*rotation_sum.x() +
+		std::cout << "--------------------------------------------------------------------\n";
+		std::cout << "After " << iteration_counter << " iterations\n";
+		std::cout << "--------------------------------------------------------------------\n";
+		
+		std::cout << "Average translation is:" << "\n" << translation_sum/iteration_counter << "\n";
+		log_avg_values << iteration_counter << "\n";
+		log_avg_values << translation_sum/iteration_counter << "\n";
+
+
+		rotation_sum.x() = rotation_sum.x()/iteration_counter;
+		rotation_sum.y() = rotation_sum.y()/iteration_counter;
+		rotation_sum.z() = rotation_sum.z()/iteration_counter;
+		rotation_sum.w() = rotation_sum.w()/iteration_counter;
+		double mag = sqrt(rotation_sum.x()*rotation_sum.x() +
 					 rotation_sum.y()*rotation_sum.y() +
 					 rotation_sum.z()*rotation_sum.z() +
-					 rotation_sum.w()*rotation_sum.w();
+					 rotation_sum.w()*rotation_sum.w());
 		rotation_sum.x() = rotation_sum.x()/mag;
 		rotation_sum.y() = rotation_sum.y()/mag;
 		rotation_sum.z() = rotation_sum.z()/mag;
@@ -192,26 +199,44 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 		std::cout << "Average rotation is:" << "\n" << rotation_avg << "\n";
 		//std::cout << "Average rotation by multiplication is:" << "\n" << rotation_avg_by_mult << "\n";
 
-		std::cout << "Average RMSE error is: " <<  rmse_avg*1.0/MAX_ITERS << "\n";
+		/*std::cout      << rotation_avg(0,0) << " " << rotation_avg(0,1) << " " << rotation_avg(0,2) << "\n"
+					   << rotation_avg(1,0) << " " << rotation_avg(1,1) << " " << rotation_avg(1,2) << "\n"
+					   << rotation_avg(2,0) << " " << rotation_avg(2,1) << " " << rotation_avg(2,2) << "\n";*/
 
-		MatrixXd eltwise_error = (camera - ((rotation_avg*lidar).colwise() + (translation_sum/MAX_ITERS))).array().square().colwise().sum();
-		double error = sqrt(eltwise_error.sum()/num_points);
-		std::cout << "RMSE: " << error << std::endl;
+		log_avg_values << std::fixed << std::setprecision(8)
+						<< rotation_avg(0,0) << " " << rotation_avg(0,1) << " " << rotation_avg(0,2) << "\n"
+					   << rotation_avg(1,0) << " " << rotation_avg(1,1) << " " << rotation_avg(1,2) << "\n"
+					   << rotation_avg(2,0) << " " << rotation_avg(2,1) << " " << rotation_avg(2,2) << "\n";
+
+		Matrix4d T;
+		T.setIdentity(4,4);
+		T.topLeftCorner(3, 3) = rotation_avg;
+		T.col(3).head(3) = translation_sum/iteration_counter;
+		std::cout << "Average transformation is: \n" << T << "\n";
+
+		std::cout << "Average RMSE is: " <<  rmse_avg*1.0/iteration_counter << "\n";
+
+		MatrixXd eltwise_error_temp = (camera - ((rotation_avg*lidar).colwise() + (translation_sum/iteration_counter))).array().square().colwise().sum();
+		double error_temp = sqrt(eltwise_error_temp.sum()/num_points);
+		
+		std::cout << "RMSE on average transformation is: " << error_temp << std::endl;
+		log_avg_values << std::fixed << std::setprecision(8) << error_temp << "\n";
+
  	}
 
  	//writing files to generate plots
  	
- 	if(iteration_counter%1 == 0)
+ 	/*if(iteration_counter%1 == 0)
 	{
 		std::ofstream log_avg_values(pkg_loc + "/log/avg_values.txt", std::ios_base::app);
 
 		log_avg_values << iteration_counter << "\n";
 		log_avg_values << translation_sum/iteration_counter << "\n";
 
-		double mag = rotation_sum.x()*rotation_sum.x() +
+		double mag = sqrt(rotation_sum.x()*rotation_sum.x() +
 					 rotation_sum.y()*rotation_sum.y() +
 					 rotation_sum.z()*rotation_sum.z() +
-					 rotation_sum.w()*rotation_sum.w();
+					 rotation_sum.w()*rotation_sum.w());
 
 		Eigen::Quaterniond rot_temp_sum;
 		rot_temp_sum.x() = rotation_sum.x()/(mag*iteration_counter);
@@ -220,51 +245,31 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 		rot_temp_sum.w() = rotation_sum.w()/(mag*iteration_counter);
 		
 		Eigen::Matrix3d rotation_avg = rot_temp_sum.toRotationMatrix();
-		log_avg_values << rotation_avg << "\n";
+		//log_avg_values << rotation_avg << "\n";
 
-		//log_avg_values << rmse_avg*1.0/iteration_counter << "\n";
+		log_avg_values << std::fixed << std::setprecision(8)
+						<< rotation_avg(0,0) << " " << rotation_avg(0,1) << " " << rotation_avg(0,2) << "\n"
+					   << rotation_avg(1,0) << " " << rotation_avg(1,1) << " " << rotation_avg(1,2) << "\n"
+					   << rotation_avg(2,0) << " " << rotation_avg(2,1) << " " << rotation_avg(2,2) << "\n";
 
-		MatrixXd eltwise_error = (camera - ((rotation_avg*lidar).colwise() + (translation_sum/iteration_counter))).array().square().colwise().sum();
-		double error = sqrt(eltwise_error.sum()/num_points);
-		log_avg_values << error << "\n";
+		MatrixXd eltwise_error_temp = (camera - ((rotation_avg*lidar).colwise() + (translation_sum/iteration_counter))).array().square().colwise().sum();
+		double error_temp = sqrt(eltwise_error_temp.sum()/num_points);
+		log_avg_values << std::fixed << std::setprecision(8) << error_temp << "\n";
 
 		log_avg_values.close();
- 	}
+ 	}*/
  	
 
 
 	return T; 
 }
 
-std::vector<std::string> split_by_space(std::string str)
-{
-	std::string buf; // Have a buffer string
-	std::stringstream ss(str); // Insert the string into a stream
 
-	std::vector<std::string> tokens; // Create vector to hold our words
-
-	while (ss >> buf)
-	    tokens.push_back(buf);
-
-	return tokens;
-}
-
-Vector3d convert_to_vec(std::vector<std::string> str)
-{
-	Vector3d retval;
-	retval.setZero();
-
-	for(int i = 0; i<3; i++)
-	{
-		retval(i) = atof(str[i].c_str());
-	}
-
-	return retval;
-}
-
-void readArucoPose(std::vector<float> marker_info)
+void readArucoPose(std::vector<float> marker_info, int num_of_marker_in_config)
 {
 	std::vector<Matrix4d> marker_pose;
+
+	ROS_ASSERT(marker_info.size()/7 == num_of_marker_in_config);
 
 	int j=0;
 	for(int i = 0; i < marker_info.size()/7; i++)
@@ -361,9 +366,9 @@ void readArucoPose(std::vector<float> marker_info)
 }
 
 
-void find_transformation(std::vector<float> marker_info, int MAX_ITERS)
+void find_transformation(std::vector<float> marker_info, int num_of_marker_in_config, int MAX_ITERS)
 {
-	readArucoPose(marker_info);
+	readArucoPose(marker_info, num_of_marker_in_config);
 	std::pair<MatrixXd, MatrixXd> point_clouds = readArray();
 	Matrix4d T = calc_RT(point_clouds.first, point_clouds.second, MAX_ITERS);
 }
