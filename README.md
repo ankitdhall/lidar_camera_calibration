@@ -15,7 +15,8 @@ The `lidar_camera_calibration/pointcloud_fusion` provides a script to fuse point
 1. [Setup](#setup)
 2. [Getting Started](#getting-started)
 3. [Usage](#usage)
-4. [Future Improvements](#future-improvements)
+4. [Fusion using lidar_camera_calibration](#fusion)
+5. [Future Improvements](#future-improvements)
 
 ## Setup
 Prerequisites:
@@ -160,6 +161,38 @@ both of which are 3D co-ordinates in meters, viewed from the `lidar` origin.
 * the next 4 points represent the second board,  
 both of which are 3D co-ordinates in meters, viewed from the `camera` origin.  
 The points are ordered according to their correspondences, i.e. the second point in the first 8 points has a correspondence with the second point in the last 8 points in this case.
+
+## Fusion using lidar_camera_calibration
+To verify the method in a more intuitive manner, `lidar_camera_calibration` was used to fuse point clouds obtained from two stereo cameras.  
+
+### Manual measurement vs. `lidar_camera_calibration`
+
+First, we compare the calibration parameters obtained from `lidar_camera_calibration` against meticulously measured values using tape by a human. The setup looked something like the this:
+
+<img src="images/setup_mm1.jpg" width="432"/> <img src="images/setup_mm2.jpg" width="432"/>
+
+The fused point cloud obtained when using manual measurements versus when using `lidar_camera_calibration` is shown in the video. Notice the large translation error, even when the two cameras are kept on a planar surface. Hallucinations of markers, cupboards and carton box (in the background) can be seen as a result of the two point clouds not being aligned properly.  
+
+On the other hand, rotation and translation estimated by `lidar_camera_calibration` almost perfectly fuses the two individual point clouds. There is a very minute translation error (~1-2cm) and almost no rotation error. The fused point cloud is aligned so properly, that one might actually believe that it is a single point cloud, but it actually consists of 2 clouds fused using extrinsic transformation between their sources (the stereo cameras).
+
+The resultant fused point clouds from both manual and `lidar_camera_calibration` methods can be seen in [this video](https://youtu.be/AbjRDtHLdz0).
+
+
+### Calibrating cameras kept at ~80 degrees
+We also wanted to see the potential of this method and used it to calibrate cameras kept at ~80 degrees and almost no overlapping field-of-view. In principle, with a properly designed experimental setup our method can calibrate cameras with zero overlapping field of view.  
+
+However, to visualize the fusion, we needed a part to be common in both point clouds. We chose a large checkerboard to be seen in both FOVs, since it can be used to see how well the point clouds have aligned and if the dimensions of the checkerboard squares are known, one can even estimate the translation errors.
+
+The setup for such an experiment looked something like this:
+<img src="images/deg801.jpg" width="280"/> <img src="images/deg802.jpg" width="280"/> <img src="images/deg803.jpg" width="280"/>  
+
+There is very less translation error, about 3-4 cm. Also, the ground planes align properly, at all distances, near and far from the camera, implying that the rotations estimated are correct.  
+
+The resultant fused point clouds after extrinsic calibration of stereo cameras kept at ~80 degrees using `lidar_camera_calibration` can be seen in [this video](https://youtu.be/Om1SFPAZ5Lc).  
+
+We believe, that better intrinsic calibration of the cameras can help drive down the error to about 1 centimeter or even less.
+
+
 
 ## Future improvements
 
