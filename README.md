@@ -9,7 +9,10 @@ The package finds a rotation and translation that transform all the points in th
 The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependencies, both of which are available in the `dependencies` folder in this repository.
 
 
-The `lidar_camera_calibration/pointcloud_fusion` provides a script to fuse point clouds obtained from two stereo cameras. Both of which were extrinsically calibrated using a LiDAR and `lidar_camera_calibration`. More details to follow.
+The `lidar_camera_calibration/pointcloud_fusion` provides a script to fuse point clouds obtained from two stereo cameras. Both of which were extrinsically calibrated using a LiDAR and `lidar_camera_calibration`. More details to follow.  
+
+### Citing `lidar_camera_calibration`
+Please cite `lidar_camera_calibration` if it helps your research.
 
 ## Contents
 1. [Setup](#setup)
@@ -162,7 +165,7 @@ both of which are 3D co-ordinates in meters, viewed from the `lidar` origin.
 both of which are 3D co-ordinates in meters, viewed from the `camera` origin.  
 The points are ordered according to their correspondences, i.e. the second point in the first 8 points has a correspondence with the second point in the last 8 points in this case.
 
-## Fusion using lidar_camera_calibration
+## Fusion using `lidar_camera_calibration`
 To verify the method in a more intuitive manner, `lidar_camera_calibration` was used to fuse point clouds obtained from two stereo cameras.  
 
 ### Manual measurement vs. `lidar_camera_calibration`
@@ -184,7 +187,7 @@ We also wanted to see the potential of this method and used it to calibrate came
 However, to visualize the fusion, we needed a part to be common in both point clouds. We chose a large checkerboard to be seen in both FOVs, since it can be used to see how well the point clouds have aligned and if the dimensions of the checkerboard squares are known, one can even estimate the translation errors.
 
 The setup for such an experiment looked something like this:
-<img src="images/deg801.jpg" width="280"/> <img src="images/deg802.jpg" width="280"/> <img src="images/deg803.jpg" width="280"/>  
+<img src="images/deg801.jpg" width="275"/> <img src="images/deg802.jpg" width="275"/> <img src="images/deg803.jpg" width="275"/>  
 
 There is very less translation error, about 3-4 cm. Also, the ground planes align properly, at all distances, near and far from the camera, implying that the rotations estimated are correct.  
 
