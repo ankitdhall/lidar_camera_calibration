@@ -187,7 +187,7 @@ We also wanted to see the potential of this method and used it to calibrate came
 However, to visualize the fusion, we needed a part to be common in both point clouds. We chose a large checkerboard to be seen in both FOVs, since it can be used to see how well the point clouds have aligned and if the dimensions of the checkerboard squares are known, one can even estimate the translation errors.
 
 The setup for such an experiment looked something like this:
-<img src="images/deg801.jpg" width="275"/> <img src="images/deg802.jpg" width="275"/> <img src="images/deg803.jpg" width="275"/>  
+<img src="images/deg801.jpg" width="270"/> <img src="images/deg802.jpg" width="270"/> <img src="images/deg803.jpg" width="270"/>  
 
 There is very less translation error, about 3-4 cm. Also, the ground planes align properly, at all distances, near and far from the camera, implying that the rotations estimated are correct.  
 
