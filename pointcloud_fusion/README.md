@@ -10,7 +10,7 @@ Provides a C++ script to fuse two point clouds from two stereo cameras.
 ## Getting started
 Place point cloud files `pointcloud_fusion/data/pcd_pos1/pcd_2.pcd` and `pointcloud_fusion/data/pcd_pos2/pcd_2.pcd`.  
 
-Two fuse the two point clouds, one needs the transformation estimated by the `lidar_camera_calibration find_transformation.launch` node, which is a rotation and translation as a 4x4 matrix that transform all points in the LiDAR frame to the camera frame.  
+To fuse the two point clouds, one needs the transformation estimated by the `lidar_camera_calibration find_transformation.launch` node, which is a rotation and translation as a 4x4 matrix that transform all points in the LiDAR frame to the camera frame.  
 
 In `pointcloud_fusion/data/rts.txt` provide,  
 T1, transformation from LiDAR-to-Camera1 (corresponding `.pcd` file in `pcd_pos1`)

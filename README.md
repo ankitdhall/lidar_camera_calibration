@@ -9,10 +9,28 @@ The package finds a rotation and translation that transform all the points in th
 The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependencies, both of which are available in the `dependencies` folder in this repository.
 
 
-The `lidar_camera_calibration/pointcloud_fusion` provides a script to fuse point clouds obtained from two stereo cameras. Both of which were extrinsically calibrated using a LiDAR and `lidar_camera_calibration`. More details to follow.  
+The `lidar_camera_calibration/pointcloud_fusion` provides a script to fuse point clouds obtained from two stereo cameras. Both of which were extrinsically calibrated using a LiDAR and `lidar_camera_calibration`.  
+
+For more details please refer to our [arXiv paper](http://arxiv.org/abs/1705.09785).
 
 ### Citing `lidar_camera_calibration`
-Please cite `lidar_camera_calibration` if it helps your research.
+Please cite our work if `lidar_camera_calibration` and our approach helps your research.  
+
+```
+@article{2017arXiv170509785D,
+   author = {{Dhall}, A. and {Chelani}, K. and {Radhakrishnan}, V. and {Krishna}, K.~M.
+    },
+    title = "{LiDAR-Camera Calibration using 3D-3D Point correspondences}",
+  journal = {ArXiv e-prints},
+archivePrefix = "arXiv",
+   eprint = {1705.09785},
+ primaryClass = "cs.RO",
+ keywords = {Computer Science - Robotics, Computer Science - Computer Vision and Pattern Recognition},
+     year = 2017,
+    month = may
+}
+```
+  
 
 ## Contents
 1. [Setup](#setup)
