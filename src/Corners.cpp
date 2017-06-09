@@ -115,7 +115,8 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 	cv::namedWindow("polygon", cv::WINDOW_NORMAL); 
 	//cv::namedWindow("combined", cv::WINDOW_NORMAL); 
 
-	std::ofstream outfile("/home/rrc/catkin_ws/src/lidar_camera_calibration/conf/points.txt", std::ios_base::trunc);
+	std::string pkg_loc = ros::package::getPath("lidar_camera_calibration");
+	std::ofstream outfile(pkg_loc + "conf/points.txt", std::ios_base::trunc);
 	outfile << QUADS*4 << "\n";
 
 	for(int q=0; q<QUADS; q++)
