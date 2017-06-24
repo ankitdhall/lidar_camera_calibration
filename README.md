@@ -59,7 +59,7 @@ Camera parameters will also be required by the package, so it is advised that yo
 
 <img src="images/setup_view1.jpg" width="432"/> <img src="images/setup_view2.jpg" width="432"/>
 
-There are a couple of configuration files that need to be specfied in order to calibrate the camera and the LiDAR. The config files are available in the `cross_sensor_calibration/conf` directory. The `find_velodyne_points.launch` file is available in the `cross_sensor_calibration/launch` directory.
+There are a couple of configuration files that need to be specfied in order to calibrate the camera and the LiDAR. The config files are available in the `lidar_camera_calibration/conf` directory. The `find_transform.launch` file is available in the `lidar_camera_calibration/launch` directory.
 
 ### config_file.txt
 
@@ -96,7 +96,7 @@ z in [`z-`, `z+`]
 
 The `cloud_intensity_threshold` is used to filter points that have intensity lower than a specified value. The default value at which it works well is `0.05`. However, while marking, if there seem to be missing/less points on the cardboard edges, tweaking this value will might help.
 
-The `use_camera_info_topic?` is a boolean flag and takes values `1` or `0`. The `find_velodyne_points.launch` node uses camera parameters to process the points and display them for marking. If you wish to use the `camera_info` topic to read off the parameters, set this to `1`. Else, the explicitly provided camera parameters in `config_file.txt` are used.
+The `use_camera_info_topic?` is a boolean flag and takes values `1` or `0`. The `find_transform.launch` node uses camera parameters to process the points and display them for marking. If you wish to use the `camera_info` topic to read off the parameters, set this to `1`. Else, the explicitly provided camera parameters in `config_file.txt` are used.
 
 `MAX_ITERS` is the number of iterations, you wish to run. The current pipeline assumes that the experimental setup: the boards are almost stationary and the camera and the LiDAR are fixed. The node will ask the user to mark the line-segments (see the video tutorial on how to go about marking [Usage](#usage)) for the first iteration. Once, the line-segments for each board have been marked, the algorithm runs for `MAX_ITERS`, collecting live data and producing n=`MAX_ITERS` sets of rotation and translation in the form of 4x4 matrix. Since, the marking is only done initially, the quadrilaterals should be drawn large enough such that if in the iterations that follow the boards move slightly (say, due to a gentle breeze) the edge points still fall in their respective quadrilaterals. After running for `MAX_ITERS` number of times, the node outputs an average translation vector (3x1) and an average rotation matrix (3x3). Averaging the translation vector is trivial; the rotations matrices are converted to quaternions and averaged, then converted back to a 3x3 rotation matrix.
 
@@ -132,16 +132,16 @@ The first line specfies 'N' the number of boards being used. Followed by N*5 lin
 All dimensions in `marker_coordinates.txt` are in centimeters.
 
 
-### cross_sensor_calibration.yaml
+### lidar_camera_calibration.yaml
 
->cross_sensor_calibration:  
+>lidar_camera_calibration:  
 >  camera_frame_topic: /frontNear/left/image_raw  
 >  camera_info_topic: /frontNear/left/camera_info  
 >  velodyne_topic: /velodyne_points
 
 Contains name of camera and velodyne topics that the node will subscribe to.
 
-### find_velodyne_points.launch
+### find_transform.launch
 
 Parameters are required for the `aruco_mapping` node and need to be specfied here. Ensure that the topics are mapped correctly for the node to function.
 Other parameters required are:  
@@ -160,7 +160,7 @@ Before launching the calibration node ensure that the ArUco markers are visible 
 Use the following command to start the calibration process once everything is setup.
 
 ```shell
-roslaunch cross_sensor_calibration find_velodyne_points.launch
+roslaunch lidar_camera_calibration find_transform.launch
 ```
 
 An initial [R|t] between the camera and the various ArUco markers will be estimated. Following this, a filtered point cloud (according to the specifications in the `config_file.txt`) will be displayed. The user needs to mark each edge of the rectangular board.
