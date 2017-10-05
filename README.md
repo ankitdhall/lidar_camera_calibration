@@ -2,7 +2,7 @@
 
 ![alt text](images/pcl.png "Pointcloud of the setup")
 
-The package is used to calibrate a Velodyne LiDAR with a camera. Specficially, Point Gray Blackfly and ZED camera have been successfully calibrated against Velodyne VLP-16 using `lidar_camera_calibration`. Since, VLP-16 provides only 16 rings, we believe that the higher models of the Velodyne will also work well with this package. We show the accuracy of the proposed pipeline by fusing point clouds, with near perfection, from multiple cameras kept in various positions. See [Fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration) for results of the point cloud fusion (videos).
+The package is used to calibrate a Velodyne LiDAR with a camera (works for both monocular and stereo). Specficially, Point Gray Blackfly and ZED camera have been successfully calibrated against Velodyne VLP-16 using `lidar_camera_calibration`. Since, VLP-16 provides only 16 rings, we believe that the higher models of the Velodyne will also work well with this package. We show the accuracy of the proposed pipeline by fusing point clouds, with near perfection, from multiple cameras kept in various positions. See [Fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration) for results of the point cloud fusion (videos).
 
 The package finds a rotation and translation that transform all the points in the LiDAR frame to the (monocular) camera frame. Please see [Usage](#usage) for a video tutorial.
 
