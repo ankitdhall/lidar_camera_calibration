@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+  <name>aruco_mapping</name>
+  <version>1.0.4</version>
+  <description>
+    This package allows user to create a map of Aruco markers in 2D or 3D space 
+    and estimate full 6 DOF pose of the camera. 
+  </description>
+
+  <maintainer email="frantisek.durovsky@smartroboticsys.eu">Frantisek Durovsky</maintainer>
+  <license>BSD</license>
+  <url type="website">http://www.smartroboticsys.eu</url>
+  <author email="jan.bacik@smartroboticsys.eu">Jan Bacik</author>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>image_transport</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>aruco</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+  <build_depend>camera_calibration_parsers</build_depend>
+  <build_depend>lidar_camera_calibration</build_depend>
+  
+  <run_depend>roscpp</run_depend>
+  <run_depend>image_transport</run_depend>
+  <run_depend>cv_bridge</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>aruco</run_depend>
+  <run_depend>visualization_msgs</run_depend>
+  <run_depend>camera_calibration_parsers</run_depend>
+  <run_depend>lidar_camera_calibration</run_depend>
+
+</package>

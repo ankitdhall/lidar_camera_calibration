@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<launch> 
+  <!-- <param name="/use_sim_time" value="true"/> -->
+  <!-- RVIZ -->
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find aruco_mapping)/launch/aruco_config.rviz" /> -->
+
+   <!--   usb_cam node -->
+ <!--  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen">
+    <param name="video_device" value="/dev/video0" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="mjpeg" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap"/>
+  </node> -->
+  
+ <!-- <node name="usb_cam" pkg="usb_cam" type="usb_cam_stereo_node" output="screen" >
+    <param name="video_device" value="/dev/video1" />
+    <param name="image_width" value="2560" />
+    <param name="image_height" value="720" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="Stereo" />
+    <param name="left_camera_name" value="left" />
+    <param name="reft_camera_name" value="right" />
+    <param name="io_method" value="userptr"/>
+    <param name="framerate" value="30" />
+ </node>  -->
+  <!-- ArUco mapping -->
+  <node pkg="aruco_mapping" type="aruco_mapping" name="aruco_mapping" output="screen">
+    <remap from="/image_raw" to="/frontNear/left/image_raw"/>
+
+    <param name="calibration_file" type="string" value="$(find aruco_mapping)/data/zed_left_uurmi.ini" /> 
+    <param name="num_of_markers" type="int" value="2" />
+    <param name="marker_size" type="double" value="0.205"/>
+    <param name="space_type" type="string" value="plane" />
+    <param name="roi_allowed" type="bool" value="false" />
+    <!--
+    <param name="roi_x" type="int" value="0" /> 
+    <param name="roi_y" type="int" value="0" />
+    <param name="roi_width" type="int" value="640" /> 
+    <param name="roi_height" type="int" value="480" /> 
+  -->
+
+  </node>  
+  
+
+  
+</launch>

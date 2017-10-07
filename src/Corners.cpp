@@ -54,6 +54,7 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 	cv::Mat image_edge_laser = project(P, frame, scan, NULL);
 	cv::threshold(image_edge_laser, image_edge_laser, 10, 255, 0);
 
+
 	
 
 	cv::Mat combined_rgb_laser;

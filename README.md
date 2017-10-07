@@ -2,9 +2,9 @@
 
 ![alt text](images/pcl.png "Pointcloud of the setup")
 
-The package is used to calibrate a Velodyne LiDAR with a camera. Specficially, Point Gray Blackfly and ZED camera have been successfully calibrated against Velodyne VLP-16 using `lidar_camera_calibration`. Since, VLP-16 provides only 16 rings, we believe that the higher models of the Velodyne will also work well with this package.
+The package is used to calibrate a Velodyne LiDAR with a camera (works for both monocular and stereo). Specficially, Point Gray Blackfly and ZED camera have been successfully calibrated against Velodyne VLP-16 using `lidar_camera_calibration`. Since, VLP-16 provides only 16 rings, we believe that the higher models of the Velodyne will also work well with this package. We show the accuracy of the proposed pipeline by fusing point clouds, with near perfection, from multiple cameras kept in various positions. See [Fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration) for results of the point cloud fusion (videos).
 
-The package finds a rotation and translation that transform all the points in the LiDAR frame to the (monocular) camera frame.
+The package finds a rotation and translation that transform all the points in the LiDAR frame to the (monocular) camera frame. Please see [Usage](#usage) for a video tutorial.
 
 The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependencies, both of which are available in the `dependencies` folder in this repository.
 
@@ -36,7 +36,7 @@ archivePrefix = "arXiv",
 1. [Setup](#setup)
 2. [Getting Started](#getting-started)
 3. [Usage](#usage)
-4. [Fusion using lidar_camera_calibration](#fusion)
+4. [Fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration)
 5. [Future Improvements](#future-improvements)
 
 ## Setup
@@ -51,7 +51,7 @@ ROS package for the camera and LiDAR you wish to calibrate.
 Clone this repository to your machine.  
 Put the cloned repository, `dependencies/aruco_ros` and `dependencies/aruco_mapping` folders in `path/to/your/ros/workspace/src` and run `catkin_make`.
 
-Please note that `aruco_mapping` in the `dependencies` folder is a slightly modified version of the original [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping), so make sure that you use the one provided here.
+Please note that `aruco_mapping` in the `dependencies` folder is a slightly modified version of the original [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping), so make sure to use the one provided here.
 
 Camera parameters will also be required by the package, so it is advised that you calibrate the camera beforehand.
 
