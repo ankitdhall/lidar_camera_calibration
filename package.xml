@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<package>
+  <name>lidar_camera_calibration</name>
+  <url>http://wiki.ros.org/lidar_camera_calibration</url>
+  <description>
+     ROS package to find a rigid-body transformation between a LiDAR and a camera
+  </description>
+  <version>0.0.1</version>
+  <maintainer email="refer_to_repo@github.com">Ankit Dhall, Kunal Chelani, Vishnu Radhakrishnan</maintainer>
+  <license>GPLv3</license>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>std_msgs</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>opencv2</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>image_transport</build_depend>
+  <build_depend>image_geometry</build_depend>
+  <build_depend>velodyne_msgs</build_depend>
+  <build_depend>velodyne_pointcloud</build_depend>
+  <build_depend>pcl_ros</build_depend>
+
+
+  <run_depend>std_msgs</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>opencv2</run_depend>
+  <run_depend>cv_bridge</run_depend>
+  <run_depend>image_transport</run_depend>
+  <run_depend>image_geometry</run_depend>
+  <run_depend>velodyne_msgs</run_depend>
+  <run_depend>velodyne_pointcloud</run_depend>
+  <run_depend>pcl_ros</run_depend>
+
+</package>

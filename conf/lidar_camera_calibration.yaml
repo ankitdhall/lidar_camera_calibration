@@ -1,0 +1,5 @@
+﻿lidar_camera_calibration:
+  camera_frame_topic: /frontNear/left/image_raw
+  camera_info_topic: /sideleft/left/camera_info
+  velodyne_topic: /velodyne_points
+

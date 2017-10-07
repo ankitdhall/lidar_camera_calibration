@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <rosparam command="load" file="$(find lidar_camera_calibration)/conf/lidar_camera_calibration.yaml" />
+  <node pkg="lidar_camera_calibration" type="find_transform" name="find_transform" output="screen">
+  </node>
+</launch>
+
