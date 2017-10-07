@@ -86,7 +86,7 @@ The file contains specifications about the following:
 >use_camera_info_topic?  
 >fx     0       cx      0  
 >0      fy      cy      0  
->0      0       1       0 
+>0      0       1       0
 
 >MAX_ITERS
 
