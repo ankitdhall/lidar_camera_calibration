@@ -48,6 +48,9 @@ Mat projection_matrix;
 
 pcl::PointCloud<myPointXYZRID> point_cloud;
 
+Eigen::Quaterniond qlidarToCamera; 
+Eigen::Matrix3d lidarToCamera;
+
 
 void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc,
 					const lidar_camera_calibration::marker_6dof::ConstPtr& msg_rt)
@@ -57,7 +60,18 @@ void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc,
 
 	// Loading Velodyne point cloud_sub
 	fromROSMsg(*msg_pc, point_cloud);
-	point_cloud = transform(point_cloud, 0, 0, 0, M_PI/2, -M_PI / 2, 0);
+
+	point_cloud = transform(point_cloud, 0, 0, 0, config.initialRot[0], config.initialRot[1], config.initialRot[2]);
+
+	//Rotation matrix to transform lidar point cloud to camera's frame
+
+	qlidarToCamera = Eigen::AngleAxisd(config.initialRot[2], Eigen::Vector3d::UnitZ())
+		*Eigen::AngleAxisd(config.initialRot[1], Eigen::Vector3d::UnitY())
+		*Eigen::AngleAxisd(config.initialRot[0], Eigen::Vector3d::UnitX());
+
+	lidarToCamera = qlidarToCamera.matrix();
+
+	std:: cout << "\n\nInitial Rot" << lidarToCamera << "\n";
 	point_cloud = intensityByRangeDiff(point_cloud, config);
 	// x := x, y := -z, z := y
 
@@ -77,7 +91,7 @@ void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc,
 	std::cout << "\n";
 
 	getCorners(temp_mat, retval, config.P, config.num_of_markers, config.MAX_ITERS);
-	find_transformation(marker_info, config.num_of_markers, config.MAX_ITERS);
+	find_transformation(marker_info, config.num_of_markers, config.MAX_ITERS, lidarToCamera);
 	//ros::shutdown();
 }
 
@@ -103,7 +117,17 @@ void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
 
 	// Loading Velodyne point cloud_sub
 	fromROSMsg(*msg_pc, point_cloud);
-	point_cloud = transform(point_cloud, 0, 0, 0, M_PI/2, -M_PI / 2, 0);
+
+	point_cloud = transform(point_cloud, 0, 0, 0, config.initialRot[0], config.initialRot[1], config.initialRot[2]);
+
+	//Rotation matrix to transform lidar point cloud to camera's frame
+
+	qlidarToCamera = Eigen::AngleAxisd(config.initialRot[2], Eigen::Vector3d::UnitZ())
+		*Eigen::AngleAxisd(config.initialRot[1], Eigen::Vector3d::UnitY())
+		*Eigen::AngleAxisd(config.initialRot[0], Eigen::Vector3d::UnitX());
+
+	lidarToCamera = qlidarToCamera.matrix();
+
 	point_cloud = intensityByRangeDiff(point_cloud, config);
 	// x := x, y := -z, z := y
 
@@ -123,7 +147,7 @@ void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
 	std::cout << "\n";
 
 	getCorners(temp_mat, retval, projection_matrix, config.num_of_markers, config.MAX_ITERS);
-	find_transformation(marker_info, config.num_of_markers, config.MAX_ITERS);
+	find_transformation(marker_info, config.num_of_markers, config.MAX_ITERS, lidarToCamera);
 	//ros::shutdown();
 }
 
@@ -132,8 +156,6 @@ int main(int argc, char** argv)
 {
 	readConfig();
 	ros::init(argc, argv, "find_transform");
-
-	
 
 	ros::NodeHandle n;
 

@@ -46,6 +46,7 @@ struct config_settings
 	bool useCameraInfo;
 	cv::Mat P;
 	int MAX_ITERS;
+	std::vector<float> initialRot;
 
 	void print()
 	{
@@ -67,6 +68,7 @@ void readConfig()
 	//std::cout<< "The conf file location: " << pkg_loc <<"/conf/config_file.txt" << std::endl;
 	std::ifstream infile(pkg_loc + "/conf/config_file.txt");
 	float left_limit=0.0, right_limit=0.0;
+	float angle;
 
 	infile >> config.s.width >> config.s.height;
 	for(int i = 0; i<3; i++)
@@ -84,6 +86,12 @@ void readConfig()
 	cv::Mat(3, 4, CV_32FC1, &p).copyTo(config.P);
 
 	infile >> config.MAX_ITERS;
+
+	for(int i = 0; i < 3; i++)
+	{
+		infile >> angle;
+		config.initialRot.push_back(angle);
+	}
 	
 	infile.close();
 	config.print();

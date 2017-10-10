@@ -70,7 +70,7 @@ std::pair<MatrixXd, MatrixXd> readArray()
 }
 
 // calculates rotation and translation that transforms points in the lidar frame to the camera frame
-Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
+Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS, Eigen::Matrix3d lidarToCamera)
 {
 	if(iteration_counter == 0)
 	{
@@ -197,6 +197,9 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 
 		Eigen::Matrix3d rotation_avg = rotation_sum.toRotationMatrix();
 		std::cout << "Average rotation is:" << "\n" << rotation_avg << "\n";
+		Eigen::Matrix3d final_rotation = rotation_avg * lidarToCamera;
+		Eigen::Vector3d final_angles = final_rotation.eulerAngles(2, 1, 0);
+
 		//std::cout << "Average rotation by multiplication is:" << "\n" << rotation_avg_by_mult << "\n";
 
 		/*std::cout      << rotation_avg(0,0) << " " << rotation_avg(0,1) << " " << rotation_avg(0,2) << "\n"
@@ -213,6 +216,8 @@ Matrix4d calc_RT(MatrixXd lidar, MatrixXd camera, int MAX_ITERS)
 		T.topLeftCorner(3, 3) = rotation_avg;
 		T.col(3).head(3) = translation_sum/iteration_counter;
 		std::cout << "Average transformation is: \n" << T << "\n";
+		std::cout << "Final rotation is:" << "\n" << final_rotation << "\n";
+		std::cout << "Final ypr is:" << "\n" <<final_angles << "\n";
 
 		std::cout << "Average RMSE is: " <<  rmse_avg*1.0/iteration_counter << "\n";
 
@@ -366,9 +371,9 @@ void readArucoPose(std::vector<float> marker_info, int num_of_marker_in_config)
 }
 
 
-void find_transformation(std::vector<float> marker_info, int num_of_marker_in_config, int MAX_ITERS)
+void find_transformation(std::vector<float> marker_info, int num_of_marker_in_config, int MAX_ITERS, Eigen::Matrix3d lidarToCamera)
 {
 	readArucoPose(marker_info, num_of_marker_in_config);
 	std::pair<MatrixXd, MatrixXd> point_clouds = readArray();
-	Matrix4d T = calc_RT(point_clouds.first, point_clouds.second, MAX_ITERS);
+	Matrix4d T = calc_RT(point_clouds.first, point_clouds.second, MAX_ITERS, lidarToCamera);
 }

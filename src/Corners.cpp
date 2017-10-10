@@ -9,6 +9,7 @@
 #include <pcl/point_cloud.h>
 #include <pcl/io/pcd_io.h>
 
+#include <ros/package.h>
 
 #include <pcl_ros/point_cloud.h>
 #include <boost/foreach.hpp>
@@ -52,6 +53,7 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 	
 	cv::Mat image_edge_laser = project(P, frame, scan, NULL);
 	cv::threshold(image_edge_laser, image_edge_laser, 10, 255, 0);
+
 
 	
 
