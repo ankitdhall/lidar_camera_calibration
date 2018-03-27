@@ -49,9 +49,14 @@ Prerequisites:
 ROS package for the camera and LiDAR you wish to calibrate.  
 
 Clone this repository to your machine.  
-Put the cloned repository, `dependencies/aruco_ros` and `dependencies/aruco_mapping` folders in `path/to/your/ros/workspace/src` and run `catkin_make`.
+Put the cloned repository, `dependencies/aruco_ros` and `dependencies/aruco_mapping` folders in `path/to/your/ros/workspace/src` and run the following commands,
 
-Please note that `aruco_mapping` in the `dependencies` folder is a slightly modified version of the original [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping), so make sure to use the one provided here.
+```bash
+catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco_ros;aruco_mapping"
+catkin_make -DCATKIN_WHITELIST_PACKAGES=""
+```
+
+Please note that `aruco_mapping` in the `dependencies` folder is a slightly modified version of the original [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping), so make sure to use the one provided here. The aruco packages have to be installed before the main calibration package can be installed. Installing them together, in one run, can result in build errors. Hence the two separate `catkin_make` commands.
 
 Camera parameters will also be required by the package, so it is advised that you calibrate the camera beforehand.
 
