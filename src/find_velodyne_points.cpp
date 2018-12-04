@@ -61,7 +61,7 @@ void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc,
 	// Loading Velodyne point cloud_sub
 	fromROSMsg(*msg_pc, point_cloud);
 
-	point_cloud = transform(point_cloud, 0, 0, 0, config.initialRot[0], config.initialRot[1], config.initialRot[2]);
+	point_cloud = transform(point_cloud,  config.initialTra[0], config.initialTra[1], config.initialTra[2], config.initialRot[0], config.initialRot[1], config.initialRot[2]);
 
 	//Rotation matrix to transform lidar point cloud to camera's frame
 
@@ -120,7 +120,7 @@ void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
 	// Loading Velodyne point cloud_sub
 	fromROSMsg(*msg_pc, point_cloud);
 
-	point_cloud = transform(point_cloud, 0, 0, 0, config.initialRot[0], config.initialRot[1], config.initialRot[2]);
+	point_cloud = transform(point_cloud,  config.initialTra[0], config.initialTra[1], config.initialTra[2], config.initialRot[0], config.initialRot[1], config.initialRot[2]);
 
 	//Rotation matrix to transform lidar point cloud to camera's frame
 
