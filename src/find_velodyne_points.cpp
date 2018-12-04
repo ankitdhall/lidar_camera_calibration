@@ -90,8 +90,10 @@ void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc,
 	}
 	std::cout << "\n";
 
-	getCorners(temp_mat, retval, config.P, config.num_of_markers, config.MAX_ITERS);
-	find_transformation(marker_info, config.num_of_markers, config.MAX_ITERS, lidarToCamera);
+	bool no_error = getCorners(temp_mat, retval, config.P, config.num_of_markers, config.MAX_ITERS);
+	if(no_error){
+	    find_transformation(marker_info, config.num_of_markers, config.MAX_ITERS, lidarToCamera);
+	}
 	//ros::shutdown();
 }
 
