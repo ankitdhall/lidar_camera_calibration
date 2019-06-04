@@ -81,7 +81,8 @@ There are a couple of configuration files that need to be specfied in order to c
 >611.651245 0.0        642.388357 0.0  
 >0.0        688.443726 365.971718 0.0  
 >0.0        0.0        1.0        0.0  
->1.57 -1.57 0.0
+>1.57 -1.57 0.0  
+>0
 
 The file contains specifications about the following:
 
@@ -100,6 +101,8 @@ The file contains specifications about the following:
 
 >initial_rot_x initial_rot_y initial_rot_z
 
+>lidar_type
+
 `x-` and `x+`, `y-` and `y+`, `z-` and `z+` are used to remove unwanted points in the cloud and are specfied in meters. The filtred point cloud makes it easier to mark the board edges. The filtered pointcloud contains all points   
 (x, y, z) such that,  
 x in [`x-`, `x+`]  
@@ -112,7 +115,20 @@ The `use_camera_info_topic?` is a boolean flag and takes values `1` or `0`. The 
 
 `MAX_ITERS` is the number of iterations, you wish to run. The current pipeline assumes that the experimental setup: the boards are almost stationary and the camera and the LiDAR are fixed. The node will ask the user to mark the line-segments (see the video tutorial on how to go about marking [Usage](#usage)) for the first iteration. Once, the line-segments for each board have been marked, the algorithm runs for `MAX_ITERS`, collecting live data and producing n=`MAX_ITERS` sets of rotation and translation in the form of 4x4 matrix. Since, the marking is only done initially, the quadrilaterals should be drawn large enough such that if in the iterations that follow the boards move slightly (say, due to a gentle breeze) the edge points still fall in their respective quadrilaterals. After running for `MAX_ITERS` number of times, the node outputs an average translation vector (3x1) and an average rotation matrix (3x3). Averaging the translation vector is trivial; the rotations matrices are converted to quaternions and averaged, then converted back to a 3x3 rotation matrix.
 
-The last line is used to specify the initial orientation of the lidar with respect to the camera, in radians. The default values are for the case when both the lidar and the camera are both pointing forward. The final transformation that is estimated by the package accounts for this initial rotation.
+`initial_rot_x initial_rot_y initial_rot_z` is used to specify the initial orientation of the lidar with respect to the camera, in radians. The default values are for the case when both the lidar and the camera are both pointing forward. The final transformation that is estimated by the package accounts for this initial rotation.
+
+`lidar_type` is used to specify the lidar type. `0` for Velodyne; `1` for Hesai-Pandar40P.
+Hesai driver by default **does not** publish wall time as time stamps. To solve this, modify `lidarCallback` function in `/path/to/catkin_ws/src/HesaiLidar-ros/src/main.cc` as follows: 
+```
+void lidarCallback(boost::shared_ptr<PPointCloud> cld, double timestamp)
+{
+    pcl_conversions::toPCL(ros::Time(timestamp), cld->header.stamp);
+    sensor_msgs::PointCloud2 output;
+    pcl::toROSMsg(*cld, output);
+    output.header.stamp = ros::Time::now(); // ADD
+    lidarPublisher.publish(output);
+}
+```
 
 ### marker_coordinates.txt
 

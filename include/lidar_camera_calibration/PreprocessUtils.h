@@ -35,6 +35,24 @@ struct myPointXYZRID{
 POINT_CLOUD_REGISTER_POINT_STRUCT(
 		myPointXYZRID, (float, x, x) (float, y, y) (float, z, z) (float, intensity, intensity) (uint16_t, ring, ring))
 
+namespace Hesai
+{
+struct PointXYZIT {
+    PCL_ADD_POINT4D;
+    float intensity;
+    double timestamp;
+    uint16_t ring;                      ///< laser ring number
+    float range;EIGEN_MAKE_ALIGNED_OPERATOR_NEW // make sure our new allocators are aligned
+};
+
+typedef pcl::PointCloud<::Hesai::PointXYZIT> PointCloud;
+
+}; // namespace Hesai
+
+POINT_CLOUD_REGISTER_POINT_STRUCT(Hesai::PointXYZIT,
+                                  (float, x, x)(float, y, y)(float, z, z)
+                                  (float, intensity, intensity)(double, timestamp, timestamp)(uint16_t, ring, ring))
+
 //------------- config utils ---------------//
 
 struct config_settings
@@ -47,6 +65,7 @@ struct config_settings
 	cv::Mat P;
 	int MAX_ITERS;
 	std::vector<float> initialRot;
+    int lidar_type;                             //0: velodyne, 1: hesai
 
 	void print()
 	{
@@ -59,6 +78,7 @@ struct config_settings
 		std::cout << "Intensity threshold (between 0.0 and 1.0): " << intensity_thresh << "\nuseCameraInfo: " << useCameraInfo << "\n";
 		std::cout << "Projection matrix: \n" << P << "\n";
 		std::cout << "MAX_ITERS: " << MAX_ITERS << "\n";
+        std::cout << "Lidar_type: " << ((lidar_type == 0) ? "Velodyne\n" : "Hesai\n");
 	}
 }config;
 
@@ -92,12 +112,31 @@ void readConfig()
 		infile >> angle;
 		config.initialRot.push_back(angle);
 	}
+
+    infile >> config.lidar_type;
 	
 	infile.close();
 	config.print();
 }
 
 //------------- point cloud utils ---------------//
+pcl::PointCloud<myPointXYZRID>::Ptr toMyPointXYZRID(const Hesai::PointCloud& point_cloud_ptr)
+{
+	pcl::PointCloud<myPointXYZRID>::Ptr new_cloud(new pcl::PointCloud<myPointXYZRID>);
+	for (auto pt = point_cloud_ptr.points.begin(); pt < point_cloud_ptr.points.end(); pt++)
+	{
+        myPointXYZRID myPt;
+        myPt.x = pt->x;
+        myPt.y = pt->y;
+        myPt.z = pt->z;
+        myPt.intensity = pt->intensity;
+        myPt.ring = pt->ring;
+        myPt.range = pt->range;
+        new_cloud->push_back(myPt);
+	}
+	return new_cloud;
+}
+
 pcl::PointCloud<pcl::PointXYZ>* toPointsXYZ(pcl::PointCloud<myPointXYZRID> point_cloud)
 {
 	pcl::PointCloud<pcl::PointXYZ> *new_cloud = new pcl::PointCloud<pcl::PointXYZ>();

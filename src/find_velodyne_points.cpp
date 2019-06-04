@@ -47,6 +47,7 @@ string VELODYNE_TOPIC;
 Mat projection_matrix;
 
 pcl::PointCloud<myPointXYZRID> point_cloud;
+Hesai::PointCloud point_cloud_hesai;
 
 Eigen::Quaterniond qlidarToCamera; 
 Eigen::Matrix3d lidarToCamera;
@@ -59,7 +60,15 @@ void callback_noCam(const sensor_msgs::PointCloud2ConstPtr& msg_pc,
 	ROS_INFO_STREAM("marker_6dof received at " << msg_rt->header.stamp.toSec());
 
 	// Loading Velodyne point cloud_sub
-	fromROSMsg(*msg_pc, point_cloud);
+    if (config.lidar_type == 0) // velodyne lidar
+    {
+	    fromROSMsg(*msg_pc, point_cloud);
+    }
+    else if (config.lidar_type == 1) //hesai lidar
+    {
+        fromROSMsg(*msg_pc, point_cloud_hesai);
+        point_cloud = *(toMyPointXYZRID(point_cloud_hesai));
+    }
 
 	point_cloud = transform(point_cloud, 0, 0, 0, config.initialRot[0], config.initialRot[1], config.initialRot[2]);
 
@@ -115,8 +124,16 @@ void callback(const sensor_msgs::CameraInfoConstPtr& msg_info,
 
 
 
-	// Loading Velodyne point cloud_sub
-	fromROSMsg(*msg_pc, point_cloud);
+    // Loading Velodyne point cloud_sub
+    if (config.lidar_type == 0) // velodyne lidar
+    {
+	    fromROSMsg(*msg_pc, point_cloud);
+    }
+    else if (config.lidar_type == 1) //hesai lidar
+    {
+        fromROSMsg(*msg_pc, point_cloud_hesai);
+        point_cloud = *(toMyPointXYZRID(point_cloud_hesai));
+    }
 
 	point_cloud = transform(point_cloud, 0, 0, 0, config.initialRot[0], config.initialRot[1], config.initialRot[2]);
 
