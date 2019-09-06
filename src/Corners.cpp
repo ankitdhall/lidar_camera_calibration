@@ -28,7 +28,7 @@
 int iteration_count = 0;
 std::vector< std::vector<cv::Point> > stored_corners;
 
-void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int num_of_markers, int MAX_ITERS)
+bool getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int num_of_markers, int MAX_ITERS)
 {
 
 	ROS_INFO_STREAM("iteration number: " << iteration_count << "\n");
@@ -178,7 +178,8 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 					rectangle(combined_rgb_laser, cv::Point(it->first.first, it->first.second), cv::Point(it->first.first, it->first.second), cv::Scalar(0, 0, 255), 3, 8, 0); // RED point
 				}
 			}
-
+			
+			if(cloud->size() < 2){ return false;}
 			
 			cv::imshow("polygon", combined_rgb_laser);
 			cv::waitKey(4);
@@ -256,6 +257,7 @@ void getCorners(cv::Mat img, pcl::PointCloud<pcl::PointXYZ> scan, cv::Mat P, int
 	{
 		ros::shutdown();
 	}
+	return true;
 	/* store point cloud with intersection points */
 	//pcl::io::savePCDFileASCII("/home/vishnu/RANSAC_marker.pcd", *marker);
 	//pcl::io::savePCDFileASCII("/home/vishnu/RANSAC_corners.pcd", *board_corners);

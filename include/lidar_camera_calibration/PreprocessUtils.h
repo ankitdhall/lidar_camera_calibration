@@ -47,6 +47,7 @@ struct config_settings
 	cv::Mat P;
 	int MAX_ITERS;
 	std::vector<float> initialRot;
+	std::vector<float> initialTra;
 
 	void print()
 	{
@@ -59,6 +60,16 @@ struct config_settings
 		std::cout << "Intensity threshold (between 0.0 and 1.0): " << intensity_thresh << "\nuseCameraInfo: " << useCameraInfo << "\n";
 		std::cout << "Projection matrix: \n" << P << "\n";
 		std::cout << "MAX_ITERS: " << MAX_ITERS << "\n";
+		
+		std::cout << "initial rotation: "
+							<< initialRot[0] << " " 
+							<< initialRot[1] << " "
+							<< initialRot[2] << "\n";
+
+		std::cout << "initial translation: "
+							<<	initialTra[0] << " "  
+							<<	initialTra[1] << " "  
+							<<	initialTra[2] << "\n";
 	}
 }config;
 
@@ -69,6 +80,7 @@ void readConfig()
 	std::ifstream infile(pkg_loc + "/conf/config_file.txt");
 	float left_limit=0.0, right_limit=0.0;
 	float angle;
+	float dist;
 
 	infile >> config.s.width >> config.s.height;
 	for(int i = 0; i<3; i++)
@@ -93,6 +105,12 @@ void readConfig()
 		config.initialRot.push_back(angle);
 	}
 	
+	for(int i = 0; i < 3; i++)
+	{
+		infile >> dist;
+		config.initialTra.push_back(dist);
+	}
+
 	infile.close();
 	config.print();
 }
