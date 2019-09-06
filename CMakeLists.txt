@@ -27,10 +27,11 @@ generate_messages(DEPENDENCIES
                   std_msgs
                   )
 
-catkin_package(CATKIN_DEPENDS std_msgs )
+catkin_package(CATKIN_DEPENDS std_msgs
+    DEPENDS eigen opencv)
 
-find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS})
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 find_package(PCL 1.7 REQUIRED) 
 include_directories(${PCL_INCLUDE_DIRS})
@@ -42,5 +43,4 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_executable(find_transform src/find_velodyne_points.cpp src/Corners.cpp) 
 target_link_libraries(find_transform ${PCL_LIBRARIES}) 
 target_link_libraries(find_transform ${catkin_LIBRARIES})
-
-
+target_link_libraries(find_transform ${OpenCV_LIBS})
