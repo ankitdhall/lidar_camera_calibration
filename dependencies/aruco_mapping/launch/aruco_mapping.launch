@@ -28,11 +28,11 @@
  </node>  -->
   <!-- ArUco mapping -->
   <node pkg="aruco_mapping" type="aruco_mapping" name="aruco_mapping" output="screen">
-    <remap from="/image_raw" to="/frontNear/left/image_raw"/>
+    <remap from="/image_raw" to="/pylon_camera_node/image_mono"/>
 
-    <param name="calibration_file" type="string" value="$(find aruco_mapping)/data/zed_left_uurmi.ini" /> 
-    <param name="num_of_markers" type="int" value="2" />
-    <param name="marker_size" type="double" value="0.205"/>
+    <param name="calibration_file" type="string" value="$(find aruco_mapping)/data/ost.ini" /> 
+    <param name="num_of_markers" type="int" value="1" />
+    <param name="marker_size" type="double" value="0.278"/>
     <param name="space_type" type="string" value="plane" />
     <param name="roi_allowed" type="bool" value="false" />
     <!--
