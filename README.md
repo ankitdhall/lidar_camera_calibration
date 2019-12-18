@@ -101,6 +101,8 @@ The file contains specifications about the following:
 
 >initial_rot_x initial_rot_y initial_rot_z
 
+>initial_trans_x initial_trans_y initial_trans_z
+
 >lidar_type
 
 `x-` and `x+`, `y-` and `y+`, `z-` and `z+` are used to remove unwanted points in the cloud and are specfied in meters. The filtred point cloud makes it easier to mark the board edges. The filtered pointcloud contains all points   
@@ -116,6 +118,8 @@ The `use_camera_info_topic?` is a boolean flag and takes values `1` or `0`(**Tho
 `MAX_ITERS` is the number of iterations, you wish to run. The current pipeline assumes that the experimental setup: the boards are almost stationary and the camera and the LiDAR are fixed. The node will ask the user to mark the line-segments (see the video tutorial on how to go about marking [Usage](#usage)) for the first iteration. Once, the line-segments for each board have been marked, the algorithm runs for `MAX_ITERS`, collecting live data and producing n=`MAX_ITERS` sets of rotation and translation in the form of 4x4 matrix. Since, the marking is only done initially, the quadrilaterals should be drawn large enough such that if in the iterations that follow the boards move slightly (say, due to a gentle breeze) the edge points still fall in their respective quadrilaterals. After running for `MAX_ITERS` number of times, the node outputs an average translation vector (3x1) and an average rotation matrix (3x3). Averaging the translation vector is trivial; the rotations matrices are converted to quaternions and averaged, then converted back to a 3x3 rotation matrix.
 
 `initial_rot_x initial_rot_y initial_rot_z` is used to specify the initial orientation of the lidar with respect to the camera, in radians. The default values are for the case when both the lidar and the camera are both pointing forward. The final transformation that is estimated by the package accounts for this initial rotation.
+
+`initial_trans_x initial_trans_y initial_trans_z` is used to specify the initial translation from the lidar to the camera in meters (see PR #69).
 
 `lidar_type` is used to specify the lidar type. `0` for Velodyne; `1` for Hesai-Pandar40P.
 Hesai driver by default **does not** publish wall time as time stamps. To solve this, modify `lidarCallback` function in `/path/to/catkin_ws/src/HesaiLidar-ros/src/main.cc` as follows: 
@@ -171,13 +175,17 @@ All dimensions in `marker_coordinates.txt` are in centimeters.
 
 Contains name of camera and velodyne topics that the node will subscribe to.
 
-### find_transform.launch
+### aruco_mapping/launch/aruco_mapping.launch
 
 Parameters are required for the `aruco_mapping` node and need to be specfied here. Ensure that the topics are mapped correctly for the node to function.
+```
+<remap from="/image_raw" to="<your image topic here>"/>
+```
 Other parameters required are:  
 * calibration_file(.ini format)    
 * num_of_markers  
 * marker_size(in meters)  
+
 
 For more information about the `aruco_mapping` package refer to their [documentation](https://github.com/SmartRoboticSystems/aruco_mapping).
 
@@ -185,17 +193,23 @@ For more information about the `aruco_mapping` package refer to their [documenta
 
 A more detailed video tutorial on how to go about using the node can be found at [https://youtu.be/SiPGPwNKE-Q](https://youtu.be/SiPGPwNKE-Q).
 
-Before launching the calibration node ensure that the ArUco markers are visible in the camera frame and the markers are arragned in ascending order of their `ArUco ids` (`ArUco ids` and their co-ordinate frame can be found/viewed by running the original `aruco_mapping` [package](https://github.com/SmartRoboticSystems/aruco_mapping)) from left to right as viewed by the camera.
+Before launching the calibration node **ensure that the ArUco markers are visible** in the camera frame and the markers are arragned in ascending order of their `ArUco ids` (`ArUco ids` and their co-ordinate frame can be found/viewed by running the original `aruco_mapping` [package](https://github.com/SmartRoboticSystems/aruco_mapping)) from left to right as viewed by the camera.
+To do so launch the aruco_mapping node:
+```shell
+roslaunch aruco_mapping arucp_mapping.launch
+```
 
-Use the following command to start the calibration process once everything is setup.
+Use the following command to start the calibration process once everything is setup and the markers are detected.
 
 ```shell
 roslaunch lidar_camera_calibration find_transform.launch
 ```
 
+Two windows, namely `cloud` and `polygon` should pop up. After enlarging the `cloud` window, a snapshot of the border points of the board should be visible. If not, you can get a live point cloud by pressing and holding the space-key, and moving the board, until the border points are visible.
+
 An initial [R|t] between the camera and the various ArUco markers will be estimated. Following this, a filtered point cloud (according to the specifications in the `config_file.txt`) will be displayed. The user needs to mark each edge of the rectangular board.
 
-Each board will have 4 line segments and need to be marked from leftmost board to the rightmost board. Marking a line segment is quite straight-forward, one needs to draw a quadrilateral around the line being marked. Click and press a key to confirm the corner of the quadrilateral. Once 4 points are clicked, each followed by a key-press, the program will move on to the next line segment. Continue marking the line segments for all boards until complete.
+Each board will have 4 line segments and need to be marked from leftmost board to the rightmost board. Marking a line segment is quite straight-forward, one needs to draw a quadrilateral around the line being marked. In the `cloud` window click and press a enter, to confirm the corner of the quadrilateral. Once 4 points are clicked, each followed by a enter-press, the program will move on to the next line segment. Continue marking the line segments for all boards until complete.
 Line segments for each board are to be marked in clock-wise order starting from the top-left.
 
 After marking all the line-segments, the rigid-body transformation between the camera and the LiDAR frame will be displayed.
