@@ -26,9 +26,11 @@ jobs:
           path: catkin_ws/lidar_camera_calibration
       - run: echo $PWD
       - run: |
-          mv lidar_camera_calibration/dependencies/aruco_ros aruco_ros
-          mv lidar_camera_calibration/dependencies/aruco_mapping aruco_mapping
+          mv dependencies/aruco_ros ../aruco_ros
+          mv dependencies/aruco_mapping ../aruco_mapping
       - run: |
+          cd ..
+          echo $PWD
           catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco;aruco_ros;aruco_msgs"
           catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco_mapping;lidar_camera_calibration"
           catkin_make -DCATKIN_WHITELIST_PACKAGES=""
