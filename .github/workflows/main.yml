@@ -5,16 +5,16 @@ on:
 
 jobs:
   build_docker:
+    strategy:
+      matrix:
+        ros_distro : [melodic]
+        ros_repo: [main]
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:bionic
     steps:
+      - uses: actions/checkout@v1
       - name: Setup ROS
-        uses: actions/checkout@v1
-      - uses: betwo/github-setup-catkin@v1.0.0
-        with:
-          ros-version: 'melodic'
-          workspace: '$GITHUB_WORKSPACE'
-      - name: Test ROS installation
-        run: |
-          catkin_make
+        uses: 'ros-industrial/industrial_ci@master'
+        env:
+          ROS_DISTRO: ${{matrix.ros_distro}}
+          ROS_REPO: ${{matrix.ros_repo}}
+      - run: ls
