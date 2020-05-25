@@ -13,5 +13,8 @@ jobs:
         uses: ros-tooling/setup-ros@0.0.16
         with:
           required-ros-distributions: melodic
-      - run: source "/opt/ros/melodic/setup.bash"
+      - name: Test ROS installation
+        run: |
+          sh /opt/ros/melodic/setup.bash
+          rosnode --help
 
