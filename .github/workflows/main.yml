@@ -10,5 +10,7 @@ jobs:
       image: ubuntu:bionic
     steps:
       - name: Setup ROS
-        uses: ros-tooling/setup-ros@0.0.16
-      - run: vcs --help
+        uses: ros-tooling/setup-ros@0.0.20
+        with:
+          required-ros-distributions: melodic
+      - run: "source /opt/ros/melodic/setup.bash && rosnode --help"
