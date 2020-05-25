@@ -11,10 +11,21 @@ jobs:
         ros_repo: [main]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      #- uses: actions/checkout@v1
       - name: Setup ROS
-        uses: 'ros-industrial/industrial_ci@master'
-        env:
-          ROS_DISTRO: ${{matrix.ros_distro}}
-          ROS_REPO: ${{matrix.ros_repo}}
-      - run: ls
+        #uses: 'ros-industrial/industrial_ci@master'
+        #env:
+        #  ROS_DISTRO: ${{matrix.ros_distro}}
+        #  ROS_REPO: ${{matrix.ros_repo}}
+      - run: |
+          pwd
+          mkdir catkin_ws
+          cd catkin_ws
+      - uses: actions/checkout@v1
+      - run: |
+          pwd
+          mv lidar_camera_calibration/dependencies/aruco_ros aruco_ros
+          mv lidar_camera_calibration/dependencies/aruco_mapping aruco_mapping
+          catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco;aruco_ros;aruco_msgs"
+          catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco_mapping;lidar_camera_calibration"
+          catkin_make -DCATKIN_WHITELIST_PACKAGES=""
