@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       #- uses: actions/checkout@v1
-      - name: Setup ROS
+      #- name: Setup ROS
         #uses: 'ros-industrial/industrial_ci@master'
         #env:
         #  ROS_DISTRO: ${{matrix.ros_distro}}
