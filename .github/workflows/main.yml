@@ -10,11 +10,11 @@ jobs:
       image: ubuntu:bionic
     steps:
       - name: Setup ROS
-        uses: ros-tooling/setup-ros@0.0.16
+        uses: actions/checkout@v1
+      - uses: betwo/github-setup-catkin@v1.0.0
         with:
-          required-ros-distributions: melodic
+          ros-version: 'melodic'
+          workspace: '$GITHUB_WORKSPACE'
       - name: Test ROS installation
         run: |
-          sh /opt/ros/melodic/setup.bash
-          rosnode --help
-
+          catkin_make
