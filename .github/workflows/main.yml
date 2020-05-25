@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       #- uses: actions/checkout@v1
-      #- name: Setup ROS
-        #uses: 'ros-industrial/industrial_ci@master'
-        #env:
-        #  ROS_DISTRO: ${{matrix.ros_distro}}
-        #  ROS_REPO: ${{matrix.ros_repo}}
+      - name: Setup ROS
+        uses: 'ros-industrial/industrial_ci@master'
+        env:
+          ROS_DISTRO: ${{matrix.ros_distro}}
+          ROS_REPO: ${{matrix.ros_repo}}
       - run: |
           echo $PWD
           mkdir -p /home/runner/work/lidar_camera_calibration/catkin_ws/lidar_camera_calibration
