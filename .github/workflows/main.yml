@@ -19,15 +19,16 @@ jobs:
         #  ROS_REPO: ${{matrix.ros_repo}}
       - run: |
           echo $PWD
-          mkdir /home/runner/work/lidar_camera_calibration/catkin_ws
+          mkdir -p /home/runner/work/lidar_camera_calibration/catkin_ws/lidar_camera_calibration
           cd /home/runner/work/lidar_camera_calibration/catkin_ws
       - uses: actions/checkout@v1
         with:
-          path: catkin_ws
+          path: catkin_ws/lidar_camera_calibration
+      - run: echo $PWD
       - run: |
-          echo $PWD
           mv lidar_camera_calibration/dependencies/aruco_ros aruco_ros
           mv lidar_camera_calibration/dependencies/aruco_mapping aruco_mapping
+      - run: |
           catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco;aruco_ros;aruco_msgs"
           catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco_mapping;lidar_camera_calibration"
           catkin_make -DCATKIN_WHITELIST_PACKAGES=""
