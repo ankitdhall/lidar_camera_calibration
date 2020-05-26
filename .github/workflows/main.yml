@@ -45,6 +45,8 @@ jobs:
           ln -s ~/work  # $CI_SOURCE_PATH
           # echo "::warning $CI_SOURCE_PATH"
           # echo "::warning `ls -l`"
+          echo $PWD
+          ls
           mv lidar_camera_calibration/dependencies/aruco_ros aruco_ros
           mv lidar_camera_calibration/dependencies/aruco_mapping aruco_mapping
           cd ..
