@@ -11,7 +11,7 @@ jobs:
       matrix:
         ros_distro : [noetic]
         ros_repo: [main]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       ROS_CI_DESKTOP: "`lsb_release -cs`"  # e.g. [trusty|xenial|...]
       CI_SOURCE_PATH: $(pwd)
