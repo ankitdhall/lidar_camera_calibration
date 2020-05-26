@@ -1,4 +1,4 @@
-name: build
+name: build ROS Melodic
 on:
   pull_request:
   push:

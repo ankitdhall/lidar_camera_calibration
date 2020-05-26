@@ -1,0 +1,60 @@
+name: build ROS Kinetic
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_docker:
+    strategy:
+      matrix:
+        ros_distro : [kinetic]
+        ros_repo: [main]
+    runs-on: ubuntu-16.04
+    env:
+      ROS_CI_DESKTOP: "`lsb_release -cs`"  # e.g. [trusty|xenial|...]
+      CI_SOURCE_PATH: $(pwd)
+      ROSINSTALL_FILE: $CI_SOURCE_PATH/dependencies.rosinstall
+      CATKIN_OPTIONS: $CI_SOURCE_PATH/catkin.options
+      ROS_PARALLEL_JOBS: '-j8 -l6'
+      # Set the python path manually to include /usr/-/python2.7/dist-packages
+      # as this is where apt-get installs python packages.
+      PYTHONPATH: $PYTHONPATH:/usr/lib/python2.7/dist-packages:/usr/local/lib/python2.7/dist-packages
+      ROS_DISTRO: kinetic
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install ROS
+        run: |
+            sudo sh -c "echo \"deb http://packages.ros.org/ros/ubuntu $ROS_CI_DESKTOP main\" > /etc/apt/sources.list.d/ros-latest.list"
+            sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+            sudo apt-get update -qq
+            sudo apt-get install dpkg
+            sudo apt-get install -y python-catkin-tools python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-image-transport
+            sudo apt-get install -y ros-$ROS_DISTRO-nodelet-core ros-$ROS_DISTRO-ddynamic-reconfigure frei0r-plugins-dev
+            source /opt/ros/$ROS_DISTRO/setup.bash
+            # Prepare rosdep to install dependencies.
+            sudo rosdep init
+            rosdep update --include-eol-distros  # Support EOL distros.
+      - name: build
+        run: |
+          source /opt/ros/$ROS_DISTRO/setup.bash
+          mkdir -p ~/catkin_ws/src
+          # cd ~/catkin_ws
+          # catkin_make
+          # source devel/setup.bash
+          cd ~/catkin_ws/src
+          ln -s ~/work  # $CI_SOURCE_PATH
+          # echo "::warning $CI_SOURCE_PATH"
+          # echo "::warning `ls -l`"
+          echo $PWD
+          ls
+          ls work/lidar_camera_calibration
+          mv work/lidar_camera_calibration/lidar_camera_calibration/dependencies/aruco_ros aruco_ros
+          mv work/lidar_camera_calibration/lidar_camera_calibration/dependencies/aruco_mapping aruco_mapping
+          mv work/lidar_camera_calibration/lidar_camera_calibration lidar_camera_calibration
+          cd ..
+          rosdep install --from-paths src --ignore-src -r -y
+          catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco;aruco_ros;aruco_msgs" -DCMAKE_CXX_FLAGS="-std=c++11"
+          catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco_mapping;lidar_camera_calibration" -DCMAKE_CXX_FLAGS="-std=c++11"
+          catkin_make -DCATKIN_WHITELIST_PACKAGES="" -DCMAKE_CXX_FLAGS="-std=c++11"
