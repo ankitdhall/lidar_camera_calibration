@@ -47,6 +47,8 @@ jobs:
           # echo "::warning `ls -l`"
           echo $PWD
           ls
+          ls work
+          ls work/lidar_camera_calibration
           mv work/lidar_camera_calibration/dependencies/aruco_ros work/aruco_ros
           mv work/lidar_camera_calibration/dependencies/aruco_mapping work/aruco_mapping
           cd ..
