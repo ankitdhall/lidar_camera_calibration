@@ -28,7 +28,7 @@ jobs:
             sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
             sudo apt-get update -qq
             sudo apt-get install dpkg
-            sudo apt-get install -y python-catkin-tools python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-roslint
+            sudo apt-get install -y python-catkin-tools python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-roslint ros-$ROS_DISTRO-image-geometry
             sudo apt-get install -y ros-$ROS_DISTRO-nodelet-core ros-$ROS_DISTRO-ddynamic-reconfigure frei0r-plugins-dev
             source /opt/ros/$ROS_DISTRO/setup.bash
             # Prepare rosdep to install dependencies.
@@ -39,12 +39,15 @@ jobs:
           source /opt/ros/$ROS_DISTRO/setup.bash
           mkdir -p ~/catkin_ws/src
           cd ~/catkin_ws
-          catkin build
+          catkin_make
           source devel/setup.bash
           cd ~/catkin_ws/src
           ln -s ~/work  # $CI_SOURCE_PATH
           # echo "::warning $CI_SOURCE_PATH"
           # echo "::warning `ls -l`"
+          mv dependencies/aruco_ros ../aruco_ros
+          mv dependencies/aruco_mapping ../aruco_mapping
           cd ..
-          catkin build
-          
+          catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco;aruco_ros;aruco_msgs"
+          catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco_mapping;lidar_camera_calibration"
+          catkin_make -DCATKIN_WHITELIST_PACKAGES=""
