@@ -33,7 +33,9 @@ jobs:
       - run: |
           cd ..
           echo $PWD
-          source /opt/ros/$ROS_DISTRO/setup.bash
+          echo $ROS_DISTRO
+          echo $ROS_REPO
+          source /opt/ros/melodic/setup.bash
           catkin build
       - name: Build lidar_camera_calibration
         run: |
