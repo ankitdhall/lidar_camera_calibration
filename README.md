@@ -1,6 +1,10 @@
 # LiDAR-Camera Calibration using 3D-3D Point correspondences
 [Ankit Dhall](https://ankitdhall.github.io/ "Ankit Dhall"), [Kunal Chelani](http://www.chalmers.se/en/Staff/Pages/chelani.aspx "Kunal Chelani"), Vishnu Radhakrishnan, KM Krishna
 
+<p align="left">
+  <a href="https://github.com/ankitdhall/lidar_camera_calibration"><img alt="GitHub Actions status" src="https://github.com/ankitdhall/lidar_camera_calibration/workflows/build/badge.svg"></a>
+</p>
+
 ---
 
 ## ROS package to calibrate a camera and a LiDAR.
