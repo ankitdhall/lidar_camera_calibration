@@ -20,7 +20,7 @@ jobs:
       ROS_PARALLEL_JOBS: '-j8 -l6'
       # Set the python path manually to include /usr/-/python2.7/dist-packages
       # as this is where apt-get installs python packages.
-      PYTHONPATH: $PYTHONPATH:/usr/lib/python2.7/dist-packages:/usr/local/lib/python2.7/dist-packages
+      PYTHONPATH: $PYTHONPATH:/usr/lib/python3/dist-packages:/usr/local/lib/python3/dist-packages
       ROS_DISTRO: noetic
     steps:
       - uses: actions/checkout@v1
