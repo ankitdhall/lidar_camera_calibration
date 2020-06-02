@@ -28,6 +28,7 @@ or implied, of Rafael Muñoz Salinas.
 #include <aruco/markerdetector.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 #include <fstream>
 #include <aruco/arucofidmarkers.h>
@@ -121,7 +122,7 @@ namespace aruco
 
 
     //it must be a 3 channel image
-    if ( input.type() ==CV_8UC3 )   cv::cvtColor ( input,grey,CV_BGR2GRAY );
+    if ( input.type() ==CV_8UC3 )   cv::cvtColor ( input,grey,cv::COLOR_BGR2GRAY );
     else     grey=input;
 
 
