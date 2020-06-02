@@ -27,7 +27,7 @@ or implied, of Rafael Muñoz Salinas.
 ********************************/
 #include <aruco/markerdetector.h>
 #include <opencv2/opencv.hpp>
-#include <opencv/highgui.h>
+#include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 #include <fstream>
 #include <aruco/arucofidmarkers.h>
