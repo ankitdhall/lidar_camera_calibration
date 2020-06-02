@@ -33,7 +33,7 @@ jobs:
             pip3 install --user git+https://github.com/catkin/catkin_tools.git
             sudo apt-get install -y python3-catkin-pkg python3-rosdep python3-wstool ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-image-transport
             # python3-catkin-tools add this after release of new catkin-pkg
-            sudo apt-get install -y ros-$ROS_DISTRO-nodelet-core ros-$ROS_DISTRO-ddynamic-reconfigure
+            sudo apt-get install -y ros-$ROS_DISTRO-nodelet-core
             source /opt/ros/$ROS_DISTRO/setup.bash
             # Prepare rosdep to install dependencies.
             sudo rosdep init
