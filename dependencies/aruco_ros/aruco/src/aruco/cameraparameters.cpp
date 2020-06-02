@@ -28,7 +28,7 @@ or implied, of Rafael Muñoz Salinas.
 #include <aruco/cameraparameters.h>
 #include <fstream>
 #include <iostream>
-#include <opencv/cv.hpp>
+#include <opencv2/opencv.hpp>
 using namespace std;
 namespace aruco
 {
