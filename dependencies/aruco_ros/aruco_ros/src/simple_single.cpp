@@ -37,7 +37,6 @@ or implied, of Rafael Muñoz Salinas.
 #include <aruco/aruco.h>
 #include <aruco/cvdrawingutils.h>
 
-#include <opencv2/core/core.hpp>
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
@@ -47,6 +46,8 @@ or implied, of Rafael Muñoz Salinas.
 #include <tf/transform_listener.h>
 #include <visualization_msgs/Marker.h>
 
+#include <dynamic_reconfigure/server.h>
+#include <aruco_ros/ArucoThresholdConfig.h>
 using namespace aruco;
 
 class ArucoSimple
@@ -73,12 +74,15 @@ private:
 
   double marker_size;
   int marker_id;
+  bool rotate_marker_axis_;
 
   ros::NodeHandle nh;
   image_transport::ImageTransport it;
   image_transport::Subscriber image_sub;
 
   tf::TransformListener _tfListener;
+
+  dynamic_reconfigure::Server<aruco_ros::ArucoThresholdConfig> dyn_rec_server;
 
 public:
   ArucoSimple()
@@ -128,6 +132,7 @@ public:
     nh.param<std::string>("camera_frame", camera_frame, "");
     nh.param<std::string>("marker_frame", marker_frame, "");
     nh.param<bool>("image_is_rectified", useRectifiedImages, true);
+    nh.param<bool>("rotate_marker_axis", rotate_marker_axis_, true);
 
     ROS_ASSERT(camera_frame != "" && marker_frame != "");
 
@@ -138,6 +143,8 @@ public:
              marker_size, marker_id);
     ROS_INFO("Aruco node will publish pose to TF with %s as parent and %s as child.",
              reference_frame.c_str(), marker_frame.c_str());
+
+    dyn_rec_server.setCallback(boost::bind(&ArucoSimple::reconf_callback, this, _1, _2));
   }
 
   bool getTransform(const std::string& refFrame,
@@ -178,6 +185,18 @@ public:
 
   void image_callback(const sensor_msgs::ImageConstPtr& msg)
   {
+    if ((image_pub.getNumSubscribers() == 0) &&
+        (debug_pub.getNumSubscribers() == 0) &&
+        (pose_pub.getNumSubscribers() == 0) &&
+        (transform_pub.getNumSubscribers() == 0) &&
+        (position_pub.getNumSubscribers() == 0) &&
+        (marker_pub.getNumSubscribers() == 0) &&
+        (pixel_pub.getNumSubscribers() == 0))
+    {
+      ROS_DEBUG("No subscribers, not looking for aruco markers");
+      return;
+    }
+
     static tf::TransformBroadcaster br;
     if(cam_info_received)
     {
@@ -198,7 +217,7 @@ public:
           // only publishing the selected marker
           if(markers[i].id == marker_id)
           {
-            tf::Transform transform = aruco_ros::arucoMarker2Tf(markers[i]);
+            tf::Transform transform = aruco_ros::arucoMarker2Tf(markers[i], rotate_marker_axis_);
             tf::StampedTransform cameraToReference;
             cameraToReference.setIdentity();
 
@@ -242,7 +261,6 @@ public:
             //Publish rviz marker representing the ArUco marker patch
             visualization_msgs::Marker visMarker;
             visMarker.header = transformMsg.header;
-            visMarker.pose = poseMsg.pose;
             visMarker.id = 1;
             visMarker.type   = visualization_msgs::Marker::CUBE;
             visMarker.action = visualization_msgs::Marker::ADD;
@@ -263,7 +281,7 @@ public:
         }
 
         //draw a 3d cube in each marker if there is 3d info
-        if(camParam.isValid() && marker_size!=-1)
+        if(camParam.isValid() && marker_size>0)
         {
           for(size_t i=0; i<markers.size(); ++i)
           {
@@ -315,6 +333,16 @@ public:
 
     cam_info_received = true;
     cam_info_sub.shutdown();
+  }
+
+
+  void reconf_callback(aruco_ros::ArucoThresholdConfig &config, uint32_t level)
+  {
+    mDetector.setThresholdParams(config.param1,config.param2);
+    if (config.normalizeImage)
+    {
+      ROS_WARN("normalizeImageIllumination is unimplemented!");
+    }
   }
 };
 

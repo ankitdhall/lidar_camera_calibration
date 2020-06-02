@@ -42,7 +42,7 @@ namespace aruco {
     Rvec.create(3,1,CV_32FC1);
     Tvec.create(3,1,CV_32FC1);
     for (int i=0;i<3;i++)
-      Tvec.at<float>(i,0)=Rvec.at<float>(i,0)=-999999;
+      Tvec.at<float>(i,0)=Rvec.at<float>(i,0)=NAN;
   }
   /**
  *
@@ -65,7 +65,7 @@ namespace aruco {
     Rvec.create(3,1,CV_32FC1);
     Tvec.create(3,1,CV_32FC1);
     for (int i=0;i<3;i++)
-      Tvec.at<float>(i,0)=Rvec.at<float>(i,0)=-999999;
+      Tvec.at<float>(i,0)=Rvec.at<float>(i,0)=NAN;
   }
 
   /**
@@ -77,8 +77,8 @@ namespace aruco {
     bool invalid=false;
     for (int i=0;i<3 && !invalid ;i++)
     {
-      if (Tvec.at<float>(i,0)!=-999999) invalid|=false;
-      if (Rvec.at<float>(i,0)!=-999999) invalid|=false;
+      invalid |= std::isnan(Tvec.at<float>(i,0));
+      invalid |= std::isnan(Rvec.at<float>(i,0));
     }
     if (invalid) throw cv::Exception(9003,"extrinsic parameters are not set","Marker::getModelViewMatrix",__FILE__,__LINE__);
     Mat Rot(3,3,CV_32FC1),Jacob;
@@ -112,7 +112,7 @@ namespace aruco {
     modelview_matrix[3 + 1*4] = 0.0;
     modelview_matrix[3 + 2*4] = 0.0;
     modelview_matrix[3 + 3*4] = 1.0;
-    if (scale != 0.0)
+    if (scale > 0.0)
     {
       modelview_matrix[12] *= scale;
       modelview_matrix[13] *= scale;
@@ -131,8 +131,8 @@ namespace aruco {
     bool invalid=false;
     for (int i=0;i<3 && !invalid ;i++)
     {
-      if (Tvec.at<float>(i,0)!=-999999) invalid|=false;
-      if (Rvec.at<float>(i,0)!=-999999) invalid|=false;
+      invalid |= std::isnan(Tvec.at<float>(i,0));
+      invalid |= std::isnan(Rvec.at<float>(i,0));
     }
     if (invalid) throw cv::Exception(9003,"extrinsic parameters are not set","Marker::getModelViewMatrix",__FILE__,__LINE__);
     
@@ -287,8 +287,6 @@ namespace aruco {
     //rotate the X axis so that Y is perpendicular to the marker plane
     if (setYPerpendicular) rotateXAxis(Rvec);
     ssize=markerSizeMeters;
-    cout<<(*this)<<endl;
-    
   }
 
   void Marker::rotateXAxis(Mat &rotation)

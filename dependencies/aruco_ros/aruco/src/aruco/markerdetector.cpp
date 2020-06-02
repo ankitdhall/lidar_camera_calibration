@@ -26,7 +26,7 @@ authors and should not be interpreted as representing official policies, either 
 or implied, of Rafael Muñoz Salinas.
 ********************************/
 #include <aruco/markerdetector.h>
-#include <opencv2/opencv.hpp>
+#include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <iostream>
 #include <fstream>
@@ -258,10 +258,10 @@ namespace aruco
  *
  *
  ************************************/
-  void  MarkerDetector::detectRectangles ( const cv::Mat &thres,vector<std::vector<cv::Point2f> > &MarkerCanditates )
+  void  MarkerDetector::detectRectangles ( const cv::Mat &thresold,vector<std::vector<cv::Point2f> > &MarkerCanditates )
   {
     vector<MarkerCandidate>  candidates;
-    detectRectangles(thres,candidates);
+    detectRectangles(thresold,candidates);
     //create the output
     MarkerCanditates.resize(candidates.size());
     for (size_t i=0;i<MarkerCanditates.size();i++)
@@ -408,24 +408,26 @@ namespace aruco
  *
  *
  ************************************/
-  void MarkerDetector::thresHold ( int method,const Mat &grey,Mat &out,double param1,double param2 ) throw ( cv::Exception )
+  void MarkerDetector::thresHold ( int method,const Mat &grey_m,Mat &out,double param1,double param2 ) throw ( cv::Exception )
   {
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
     if (param1==-1) param1=_thresParam1;
     if (param2==-1) param2=_thresParam2;
+#pragma GCC diagnostic pop 
 
-    if ( grey.type() !=CV_8UC1 )     throw cv::Exception ( 9001,"grey.type()!=CV_8UC1","MarkerDetector::thresHold",__FILE__,__LINE__ );
+    if ( grey_m.type() !=CV_8UC1 )     throw cv::Exception ( 9001,"grey_m.type()!=CV_8UC1","MarkerDetector::thresHold",__FILE__,__LINE__ );
     switch ( method )
     {
     case FIXED_THRES:
-      cv::threshold ( grey, out, param1,255, CV_THRESH_BINARY_INV );
+      cv::threshold ( grey_m, out, param1,255, CV_THRESH_BINARY_INV );
       break;
     case ADPT_THRES://currently, this is the best method
       //ensure that _thresParam1%2==1
       if ( param1<3 ) param1=3;
       else if ( ( ( int ) param1 ) %2 !=1 ) param1= ( int ) ( param1+1 );
 
-      cv::adaptiveThreshold ( grey,out,255,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY_INV,param1,param2 );
+      cv::adaptiveThreshold ( grey_m,out,255,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY_INV,param1,param2 );
       break;
     case CANNY:
     {
@@ -433,7 +435,7 @@ namespace aruco
       //However, some times there are small holes in the marker contour that makes
       //the contour detector not to find it properly
       //if there is a missing pixel
-      cv::Canny ( grey, out, 10, 220 );
+      cv::Canny ( grey_m, out, 10, 220 );
       //I've tried a closing but it add many more points that some
       //times makes this even worse
       // 			  Mat aux;
@@ -722,7 +724,7 @@ namespace aruco
  *
  *
  */
-  void MarkerDetector::findBestCornerInRegion_harris ( const cv::Mat  & grey,vector<cv::Point2f> &  Corners,int blockSize )
+  void MarkerDetector::findBestCornerInRegion_harris ( const cv::Mat  & grey_m,vector<cv::Point2f> &  Corners,int blockSize )
   {
     int halfSize=blockSize/2;
     for ( size_t i=0;i<Corners.size();i++ )
@@ -730,10 +732,10 @@ namespace aruco
       //check that the region is into the image limits
       cv::Point2f min ( Corners[i].x-halfSize,Corners[i].y-halfSize );
       cv::Point2f max ( Corners[i].x+halfSize,Corners[i].y+halfSize );
-      if ( min.x>=0  &&  min.y>=0 && max.x<grey.cols && max.y<grey.rows )
+      if ( min.x>=0  &&  min.y>=0 && max.x<grey_m.cols && max.y<grey_m.rows )
       {
         cv::Mat response;
-        cv::Mat subImage ( grey,cv::Rect ( Corners[i].x-halfSize,Corners[i].y-halfSize,blockSize ,blockSize ) );
+        cv::Mat subImage ( grey_m,cv::Rect ( Corners[i].x-halfSize,Corners[i].y-halfSize,blockSize ,blockSize ) );
         vector<Point2f> corners2;
         goodFeaturesToTrack ( subImage, corners2, 10, 0.001, halfSize );
         float minD=9999;
@@ -765,9 +767,12 @@ namespace aruco
     cornerIndex.resize(4);
     for(size_t j=0; j<candidate.contour.size(); ++j) {
       for(size_t k=0; k<4; ++k) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
         if(candidate.contour[j].x==candidate[k].x && candidate.contour[j].y==candidate[k].y) {
           cornerIndex[k] = j;
         }
+#pragma GCC diagnostic pop 
       }
     }
 

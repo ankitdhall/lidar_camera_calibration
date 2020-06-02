@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>aruco</name>
+  <version>0.2.0</version>
+  <description>
+    The ARUCO Library has been developed by the Ava group of the Univeristy of Cordoba(Spain).
+    It provides real-time marker based 3D pose estimation using AR markers.
+  </description>
+  <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
+  <license>BSD</license>
+  <url type="website">http://www.uco.es/investiga/grupos/ava/node/26</url>
+  <author email="rmsalinas@uco.es">Rafael Muñoz Salinas</author>
+  <author email="bence.magyar@pal-robotics.com">Bence Magyar</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>libopencv-dev</depend>
+</package>

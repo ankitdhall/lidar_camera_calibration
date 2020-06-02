@@ -134,7 +134,7 @@ public:
         Rvec.create(3,1,CV_32FC1);
         Tvec.create(3,1,CV_32FC1);
         for (int i=0;i<3;i++)
-            Tvec.at<float>(i,0)=Rvec.at<float>(i,0)=-999999;
+            Tvec.at<float>(i,0)=Rvec.at<float>(i,0)=NAN;
     }
 
     /**Given the extrinsic camera parameters returns the GL_MODELVIEW matrix for opengl.

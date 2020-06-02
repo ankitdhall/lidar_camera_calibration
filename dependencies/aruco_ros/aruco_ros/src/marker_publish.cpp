@@ -37,7 +37,6 @@ or implied, of Rafael Muñoz Salinas.
 #include <aruco/aruco.h>
 #include <aruco/cvdrawingutils.h>
 
-#include <opencv2/core/core.hpp>
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
@@ -61,6 +60,7 @@ private:
   std::string camera_frame_;
   std::string reference_frame_;
   double marker_size_;
+  bool rotate_marker_axis_;
 
   // ROS pub-sub
   ros::NodeHandle nh_;
@@ -96,7 +96,8 @@ public:
       nh_.param<bool>("image_is_rectified", useRectifiedImages_, true);
       nh_.param<std::string>("reference_frame", reference_frame_, "");
       nh_.param<std::string>("camera_frame", camera_frame_, "");
-      ROS_ASSERT(not camera_frame_.empty());
+      nh_.param<bool>("rotate_marker_axis", rotate_marker_axis_, true);
+      ROS_ASSERT(not (camera_frame_.empty() and not reference_frame_.empty()));
       if(reference_frame_.empty())
         reference_frame_ = camera_frame_;
     }
@@ -206,7 +207,7 @@ public:
             for(size_t i=0; i<markers_.size(); ++i)
             {
               aruco_msgs::Marker & marker_i = marker_msg_->markers.at(i);
-              tf::Transform transform = aruco_ros::arucoMarker2Tf(markers_[i]);
+              tf::Transform transform = aruco_ros::arucoMarker2Tf(markers_[i], rotate_marker_axis_);
               transform = static_cast<tf::Transform>(cameraToReference) * transform;
               tf::poseTFToMsg(transform, marker_i.pose.pose);
               marker_i.header.frame_id = reference_frame_;
@@ -234,7 +235,7 @@ public:
         }
 
         //draw a 3d cube in each marker if there is 3d info
-        if(camParam_.isValid() && marker_size_!=-1)
+        if(camParam_.isValid() && marker_size_>0)
         {
           for(size_t i=0; i<markers_.size(); ++i)
             aruco::CvDrawingUtils::draw3dAxis(inImage_, markers_[i], camParam_);

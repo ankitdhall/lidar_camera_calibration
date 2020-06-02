@@ -38,7 +38,6 @@ or implied, of Rafael Muñoz Salinas.
 #include <aruco/aruco.h>
 #include <aruco/cvdrawingutils.h>
 
-#include <opencv2/core/core.hpp>
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
@@ -181,7 +180,7 @@ void image_callback(const sensor_msgs::ImageConstPtr& msg)
       }
 
       //draw a 3d cube in each marker if there is 3d info
-      if(camParam.isValid() && marker_size!=-1)
+      if(camParam.isValid() && marker_size>0)
       {
         for(unsigned int i=0; i<markers.size(); ++i)
         {

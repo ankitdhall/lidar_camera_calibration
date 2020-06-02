@@ -158,8 +158,8 @@ void Board::glGetModelViewMatrix ( double modelview_matrix[16] ) throw ( cv::Exc
     bool invalid=false;
     for ( int i=0;i<3 && !invalid ;i++ )
     {
-        if ( Tvec.at<float> ( i,0 ) !=-999999 ) invalid|=false;
-        if ( Rvec.at<float> ( i,0 ) !=-999999 ) invalid|=false;
+      invalid |= std::isnan(Tvec.at<float>(i,0));
+      invalid |= std::isnan(Rvec.at<float>(i,0));
     }
     if ( invalid ) throw cv::Exception ( 9002,"extrinsic parameters are not set","Marker::getModelViewMatrix",__FILE__,__LINE__ );
     Mat Rot ( 3,3,CV_32FC1 ),Jacob;
@@ -193,7 +193,7 @@ void Board::glGetModelViewMatrix ( double modelview_matrix[16] ) throw ( cv::Exc
     modelview_matrix[3 + 1*4] = 0.0;
     modelview_matrix[3 + 2*4] = 0.0;
     modelview_matrix[3 + 3*4] = 1.0;
-    if ( scale != 0.0 )
+    if ( scale > 0.0 )
     {
         modelview_matrix[12] *= scale;
         modelview_matrix[13] *= scale;
@@ -213,8 +213,8 @@ void Board::OgreGetPoseParameters ( double position[3], double orientation[4] ) 
     bool invalid=false;
     for ( int i=0;i<3 && !invalid ;i++ )
     {
-        if ( Tvec.at<float> ( i,0 ) !=-999999 ) invalid|=false;
-        if ( Rvec.at<float> ( i,0 ) !=-999999 ) invalid|=false;
+      invalid |= std::isnan(Tvec.at<float>(i,0));
+      invalid |= std::isnan(Rvec.at<float>(i,0));
     }
     if ( invalid ) throw cv::Exception ( 9003,"extrinsic parameters are not set","Marker::getModelViewMatrix",__FILE__,__LINE__ );
 

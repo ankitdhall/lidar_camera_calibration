@@ -3,7 +3,7 @@ project(aruco)
 
 find_package(catkin)
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3 REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include

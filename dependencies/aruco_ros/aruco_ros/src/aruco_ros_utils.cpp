@@ -42,7 +42,7 @@ aruco::CameraParameters aruco_ros::rosCameraInfo2ArucoCamParams(const sensor_msg
     return aruco::CameraParameters(cameraMatrix, distorsionCoeff, size);
 }
 
-tf::Transform aruco_ros::arucoMarker2Tf(const aruco::Marker &marker)
+tf::Transform aruco_ros::arucoMarker2Tf(const aruco::Marker &marker, bool rotate_marker_axis)
 {
     cv::Mat rot(3, 3, CV_64FC1);
     cv::Mat Rvec64;
@@ -51,21 +51,24 @@ tf::Transform aruco_ros::arucoMarker2Tf(const aruco::Marker &marker)
     cv::Mat tran64;
     marker.Tvec.convertTo(tran64, CV_64FC1);
 
-    cv::Mat rotate_to_ros(3, 3, CV_64FC1);
-    // -1 0 0
-    // 0 0 1
-    // 0 1 0
-    rotate_to_ros.at<double>(0,0) = -1.0;
-    rotate_to_ros.at<double>(0,1) = 0.0;
-    rotate_to_ros.at<double>(0,2) = 0.0;
-    rotate_to_ros.at<double>(1,0) = 0.0;
-    rotate_to_ros.at<double>(1,1) = 0.0;
-    rotate_to_ros.at<double>(1,2) = 1.0;
-    rotate_to_ros.at<double>(2,0) = 0.0;
-    rotate_to_ros.at<double>(2,1) = 1.0;
-    rotate_to_ros.at<double>(2,2) = 0.0;
-    rot = rot*rotate_to_ros.t();
-
+    // Rotate axis direction as to fit ROS (?)
+    if (rotate_marker_axis)
+    {
+      cv::Mat rotate_to_ros(3, 3, CV_64FC1);
+      // -1 0 0
+      // 0 0 1
+      // 0 1 0
+      rotate_to_ros.at<double>(0,0) = -1.0;
+      rotate_to_ros.at<double>(0,1) = 0.0;
+      rotate_to_ros.at<double>(0,2) = 0.0;
+      rotate_to_ros.at<double>(1,0) = 0.0;
+      rotate_to_ros.at<double>(1,1) = 0.0;
+      rotate_to_ros.at<double>(1,2) = 1.0;
+      rotate_to_ros.at<double>(2,0) = 0.0;
+      rotate_to_ros.at<double>(2,1) = 1.0;
+      rotate_to_ros.at<double>(2,2) = 0.0;
+      rot = rot*rotate_to_ros.t();
+    }
     tf::Matrix3x3 tf_rot(rot.at<double>(0,0), rot.at<double>(0,1), rot.at<double>(0,2),
                          rot.at<double>(1,0), rot.at<double>(1,1), rot.at<double>(1,2),
                          rot.at<double>(2,0), rot.at<double>(2,1), rot.at<double>(2,2));

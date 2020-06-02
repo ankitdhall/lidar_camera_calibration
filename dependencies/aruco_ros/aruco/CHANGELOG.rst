@@ -2,6 +2,24 @@
 Changelog for package aruco
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.2.4 (2019-08-28)
+------------------
+* Fix dependency
+* Remove build warnings
+* Contributors: Victor Lopez
+
+0.2.3 (2018-04-20)
+------------------
+* Remove debug log msg
+* forcing opencv3 build for kinetic
+* Contributors: Bence Magyar, Christopher Hrabia, Jordi Pages, Victor Lopez
+
+0.2.2 (2017-07-25)
+------------------
+
+0.2.1 (2017-07-21)
+------------------
+
 0.2.0 (2016-10-19)
 ------------------
 * Fix compilation error in Ubuntu 16.04

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>aruco_ros</name>
-  <version>0.2.0</version>
+  <version>0.2.4</version>
   <description>
     The ARUCO Library has been developed by the Ava group of the Univeristy of Cordoba(Spain).
     It provides real-time marker based 3D pose estimation using AR markers.
@@ -22,5 +22,6 @@
   <depend>tf</depend>
   <depend>aruco</depend>
   <depend>aruco_msgs</depend>
+  <depend>sensor_msgs</depend>
   <depend>visualization_msgs</depend>
 </package>
