@@ -22,7 +22,7 @@ The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependen
 
 The `lidar_camera_calibration/pointcloud_fusion` provides a script to fuse point clouds obtained from two stereo cameras. Both of which were extrinsically calibrated using a LiDAR and `lidar_camera_calibration`.  
 
-For more details please refer to our [arXiv paper](http://arxiv.org/abs/1705.09785).
+For more details please refer to our [paper](http://arxiv.org/abs/1705.09785).
 
 ### Citing `lidar_camera_calibration`
 Please cite our work if `lidar_camera_calibration` and our approach helps your research.  
