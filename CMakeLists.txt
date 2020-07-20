@@ -30,7 +30,7 @@ generate_messages(DEPENDENCIES
                   std_msgs
                   )
 
-catkin_package(CATKIN_DEPENDS std_msgs
+catkin_package(CATKIN_DEPENDS std_msgs velodyne_pointcloud
     DEPENDS eigen opencv)
 
 find_package(OpenCV REQUIRED)
