@@ -34,6 +34,7 @@ jobs:
             sudo apt-get install -y python3-catkin-pkg python3-rosdep python3-wstool ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-image-transport
             # python3-catkin-tools add this after release of new catkin-pkg
             sudo apt-get install -y ros-$ROS_DISTRO-nodelet-core
+            sudo apt-get install -y ros-$ROS_DISTRO-velodyne-pcl
             source /opt/ros/$ROS_DISTRO/setup.bash
             # Prepare rosdep to install dependencies.
             sudo rosdep init
