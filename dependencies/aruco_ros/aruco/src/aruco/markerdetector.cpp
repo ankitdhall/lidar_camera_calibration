@@ -10,7 +10,7 @@ permitted provided that the following conditions are met:
    2. Redistributions in binary form must reproduce the above copyright notice, this list
       of conditions and the following disclaimer in the documentation and/or other materials
       provided with the distribution.
-
+CV_
 THIS SOFTWARE IS PROVIDED BY Rafael Muñoz Salinas ''AS IS'' AND ANY EXPRESS OR IMPLIED
 WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
 FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Rafael Muñoz Salinas OR
@@ -279,7 +279,7 @@ namespace aruco
     std::vector<cv::Vec4i> hierarchy2;
 
     thresImg.copyTo ( thres2 );
-    cv::findContours ( thres2 , contours2, hierarchy2,CV_RETR_TREE, CV_CHAIN_APPROX_NONE );
+    cv::findContours ( thres2 , contours2, hierarchy2, cv::RETR_TREE, cv::CHAIN_APPROX_NONE );
     vector<Point>  approxCurve;
     ///for each contour, analyze if it is a paralelepiped likely to be the marker
 
@@ -421,14 +421,14 @@ namespace aruco
     switch ( method )
     {
     case FIXED_THRES:
-      cv::threshold ( grey_m, out, param1,255, CV_THRESH_BINARY_INV );
+      cv::threshold ( grey_m, out, param1,255, cv::THRESH_BINARY_INV );
       break;
     case ADPT_THRES://currently, this is the best method
       //ensure that _thresParam1%2==1
       if ( param1<3 ) param1=3;
       else if ( ( ( int ) param1 ) %2 !=1 ) param1= ( int ) ( param1+1 );
 
-      cv::adaptiveThreshold ( grey_m,out,255,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY_INV,param1,param2 );
+      cv::adaptiveThreshold ( grey_m,out,255,ADAPTIVE_THRESH_MEAN_C,cv::THRESH_BINARY_INV,param1,param2 );
       break;
     case CANNY:
     {
@@ -949,10 +949,10 @@ namespace aruco
   {
     for ( size_t i=0;i<markers.size();++i )
     {
-      cv::line ( out,markers[i][0],markers[i][1],cvScalar ( 255,0,0 ),2,CV_AA );
-      cv::line ( out,markers[i][1],markers[i][2],cvScalar ( 255,0,0 ),2,CV_AA );
-      cv::line ( out,markers[i][2],markers[i][3],cvScalar ( 255,0,0 ),2,CV_AA );
-      cv::line ( out,markers[i][3],markers[i][0],cvScalar ( 255,0,0 ),2,CV_AA );
+      cv::line ( out,markers[i][0],markers[i][1],cv::Scalar ( 255,0,0 ),2,LINE_AA );
+      cv::line ( out,markers[i][1],markers[i][2],cv::Scalar ( 255,0,0 ),2,LINE_AA );
+      cv::line ( out,markers[i][2],markers[i][3],cv::Scalar ( 255,0,0 ),2,LINE_AA );
+      cv::line ( out,markers[i][3],markers[i][0],cv::Scalar ( 255,0,0 ),2,LINE_AA );
     }
   }
   /* Attempt to make it faster than in opencv. I could not :( Maybe trying with SSE3...
