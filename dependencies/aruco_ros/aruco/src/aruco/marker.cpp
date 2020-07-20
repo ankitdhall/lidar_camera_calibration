@@ -216,13 +216,13 @@ namespace aruco {
   void Marker::draw(Mat &in, Scalar color, int lineWidth ,bool writeId)const
   {
     if (size()!=4) return;
-    cv::line( in,(*this)[0],(*this)[1],color,lineWidth,CV_AA);
-    cv::line( in,(*this)[1],(*this)[2],color,lineWidth,CV_AA);
-    cv::line( in,(*this)[2],(*this)[3],color,lineWidth,CV_AA);
-    cv::line( in,(*this)[3],(*this)[0],color,lineWidth,CV_AA);
-    cv::rectangle( in,(*this)[0]-Point2f(2,2),(*this)[0]+Point2f(2,2),Scalar(0,0,255,255),lineWidth,CV_AA);
-    cv::rectangle( in,(*this)[1]-Point2f(2,2),(*this)[1]+Point2f(2,2),Scalar(0,255,0,255),lineWidth,CV_AA);
-    cv::rectangle( in,(*this)[2]-Point2f(2,2),(*this)[2]+Point2f(2,2),Scalar(255,0,0,255),lineWidth,CV_AA);
+    cv::line( in,(*this)[0],(*this)[1],color,lineWidth,LINE_AA);
+    cv::line( in,(*this)[1],(*this)[2],color,lineWidth,LINE_AA);
+    cv::line( in,(*this)[2],(*this)[3],color,lineWidth,LINE_AA);
+    cv::line( in,(*this)[3],(*this)[0],color,lineWidth,LINE_AA);
+    cv::rectangle( in,(*this)[0]-Point2f(2,2),(*this)[0]+Point2f(2,2),Scalar(0,0,255,255),lineWidth,LINE_AA);
+    cv::rectangle( in,(*this)[1]-Point2f(2,2),(*this)[1]+Point2f(2,2),Scalar(0,255,0,255),lineWidth,LINE_AA);
+    cv::rectangle( in,(*this)[2]-Point2f(2,2),(*this)[2]+Point2f(2,2),Scalar(255,0,0,255),lineWidth,LINE_AA);
     if (writeId) {
       char cad[100];
       sprintf(cad,"id=%d",id);
