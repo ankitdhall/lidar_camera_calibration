@@ -221,7 +221,7 @@ namespace aruco
       if ( _cornerMethod==HARRIS )
         findBestCornerInRegion_harris ( grey, Corners,7 );
       else if ( _cornerMethod==SUBPIX )
-        cornerSubPix ( grey, Corners,cvSize ( 5,5 ), cvSize ( -1,-1 )   ,cvTermCriteria ( CV_TERMCRIT_ITER|CV_TERMCRIT_EPS,3,0.05 ) );
+        cornerSubPix ( grey, Corners,cv::Size ( 5,5 ), cv::Size ( -1,-1 )   ,cv::TermCriteria (  cv::TermCriteria::EPS | cv::TermCriteria::COUNT,3,0.05 ) );
 
       //copy back
       for ( unsigned int i=0;i<detectedMarkers.size();++i )
