@@ -152,7 +152,7 @@ void image_callback(const sensor_msgs::ImageConstPtr& msg)
         //              //paint a circle in the mid point of the normalized coordinates of both markers
         //              cv::circle(inImage,
         //                         cv::Point((u[0]+u[1])/2, (v[0]+v[1])/2),
-        //                         3, cv::Scalar(0,0,255), CV_FILLED);
+        //                         3, cv::Scalar(0,0,255), cv::FILLED);
 
 
         //compute the midpoint in 3D:
@@ -175,7 +175,7 @@ void image_callback(const sensor_msgs::ImageConstPtr& msg)
         //paint a circle in the mid point of the normalized coordinates of both markers
         cv::circle(inImage,
                    cv::Point(u[0], v[0]),
-                   3, cv::Scalar(0,0,255), CV_FILLED);
+                   3, cv::Scalar(0,0,255), cv::FILLED);
 
       }
 
