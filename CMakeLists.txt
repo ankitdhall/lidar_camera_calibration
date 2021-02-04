@@ -22,6 +22,7 @@ find_package(catkin
   image_geometry
   velodyne_msgs
   velodyne_pointcloud
+  velodyne_pcl
   pcl_ros
 )
 
@@ -30,7 +31,7 @@ generate_messages(DEPENDENCIES
                   std_msgs
                   )
 
-catkin_package(CATKIN_DEPENDS std_msgs velodyne_pointcloud
+catkin_package(CATKIN_DEPENDS std_msgs velodyne_pointcloud velodyne_pcl
     DEPENDS eigen opencv)
 
 find_package(OpenCV REQUIRED)
