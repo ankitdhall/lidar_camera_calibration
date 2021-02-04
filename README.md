@@ -5,6 +5,7 @@
   <!-- <a href="https://github.com/ankitdhall/lidar_camera_calibration"><img alt="GitHub Actions status" src="https://github.com/ankitdhall/lidar_camera_calibration/workflows/build%20ROS%20Noetic/badge.svg"></a> -->
   <a href="https://github.com/ankitdhall/lidar_camera_calibration"><img alt="GitHub Actions status" src="https://github.com/ankitdhall/lidar_camera_calibration/workflows/build%20ROS%20Melodic/badge.svg"></a>
   <a href="https://github.com/ankitdhall/lidar_camera_calibration"><img alt="GitHub Actions status" src="https://github.com/ankitdhall/lidar_camera_calibration/workflows/build%20ROS%20Kinetic/badge.svg"></a>
+  <a href="https://github.com/ankitdhall/lidar_camera_calibration"><img alt="GitHub Actions status" src="https://github.com/ankitdhall/lidar_camera_calibration/workflows/build%20ROS%20Noetic/badge.svg"></a>
 </p>
 
 ---
