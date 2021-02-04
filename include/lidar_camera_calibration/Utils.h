@@ -80,17 +80,16 @@ void onMouse( int event, int x, int y, int f, void* g)
 	switch(event)
 	{
 
-	case  CV_EVENT_LBUTTONDOWN  :
+		case  cv::EVENT_LBUTTONDOWN :
+				P->x=x;
+				P->y=y;
+				break;
 
-									P->x=x;
-									P->y=y;
-									break;
-
-	case  CV_EVENT_LBUTTONUP    :
-									P->x=x;
-									P->y=y;
-									//std::cout << P->x << " " << P->y << "\n";
-									break;
+		case  cv::EVENT_LBUTTONUP   :
+				P->x=x;
+				P->y=y;
+				//std::cout << P->x << " " << P->y << "\n";
+				break;
 
 	default                     :   break;
 
