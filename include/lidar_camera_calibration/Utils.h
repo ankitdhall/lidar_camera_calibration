@@ -12,8 +12,14 @@
 #include <pcl_ros/point_cloud.h>
 #include <boost/foreach.hpp>
 #include <pcl_conversions/pcl_conversions.h>
-//#include <velodyne_pointcloud/point_types.h>
+
+#include <linux/version.h>
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,4,0)
+#include <velodyne_pointcloud/point_types.h>
+#else
 #include <velodyne_pcl/point_types.h>
+#endif
+
 #include <pcl/common/eigen.h>
 #include <pcl/common/transforms.h>
 #include <pcl/filters/passthrough.h>
