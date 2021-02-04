@@ -150,7 +150,7 @@ After everything is setup, it should look something like this. Notice how the ax
 >5.0  
 >20.5  
 
-After sticking the ArUco marker on a planar cardboard, it will look like this.
+After sticking the ArUco marker on a planar cardboard, it will look like this.  
 ![alt text](images/board_dim_label.jpg "Reference image for board dimensions")
 
 The first line specfies 'N' the number of boards being used. Followed by N*5 lines with the following information about the dimensions of the board:
