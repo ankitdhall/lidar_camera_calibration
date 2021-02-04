@@ -32,7 +32,7 @@ jobs:
             sudo apt-get install dpkg
             sudo apt-get install -y python-catkin-tools python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-cv-bridge ros-$ROS_DISTRO-image-transport
             sudo apt-get install -y ros-$ROS_DISTRO-nodelet-core ros-$ROS_DISTRO-ddynamic-reconfigure frei0r-plugins-dev
-            sudo apt-get install -y ros-$ROS_DISTRO-velodyne-pcl
+            sudo apt-get install -y ros-$ROS_DISTRO-velodyne-pointcloud
             source /opt/ros/$ROS_DISTRO/setup.bash
             # Prepare rosdep to install dependencies.
             sudo rosdep init
