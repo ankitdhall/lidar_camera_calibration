@@ -14,14 +14,9 @@
 
 ![alt text](images/pcl.png "Pointcloud of the setup")
 
-The package is used to calibrate a Velodyne LiDAR with a camera (works for both monocular and stereo). Specficially, Point Gray Blackfly and ZED camera have been successfully calibrated against Velodyne VLP-16 using `lidar_camera_calibration`. Since, VLP-16 provides only 16 rings, we believe that the higher models of the Velodyne will also work well with this package. We show the accuracy of the proposed pipeline by fusing point clouds, with near perfection, from multiple cameras kept in various positions. See [Fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration) for results of the point cloud fusion (videos).
+The package is used to calibrate a LiDAR (config to support Hesai and Velodyne hardware) with a camera (works for both monocular and stereo).
 
-The package finds a rotation and translation that transform all the points in the LiDAR frame to the (monocular) camera frame. Please see [Usage](#usage) for a video tutorial.
-
-The package uses `aruco_ros` and a slightly modified `aruco_mapping` as dependencies, both of which are available in the `dependencies` folder in this repository.
-
-
-The `lidar_camera_calibration/pointcloud_fusion` provides a script to fuse point clouds obtained from two stereo cameras. Both of which were extrinsically calibrated using a LiDAR and `lidar_camera_calibration`.  
+The package finds a rotation and translation that transform all the points in the LiDAR frame to the (monocular) camera frame. Please see [Usage](#usage) for a video tutorial. The `lidar_camera_calibration/pointcloud_fusion` provides a script to fuse point clouds obtained from two stereo cameras. Both of which were extrinsically calibrated using a LiDAR and `lidar_camera_calibration`. We show the accuracy of the proposed pipeline by fusing point clouds, with near perfection, from multiple cameras kept in various positions. See [Fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration) for results of the point cloud fusion (videos).  
 
 For more details please refer to our [paper](http://arxiv.org/abs/1705.09785).
 
@@ -45,35 +40,29 @@ archivePrefix = "arXiv",
   
 
 ## Contents
-1. [Setup](#setup)
-2. [Getting Started](#getting-started)
-3. [Usage](#usage)
-4. [Fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration)
-5. [Future Improvements](#future-improvements)
+1. [Setup and Installation](#setup-and-installation)
+2. [Future Improvements](#future-improvements)
+3. [Getting Started](#getting-started)
+4. [Usage](#usage)
+5. [Results and point cloud fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration)
 
-## Setup
-Prerequisites:
+## Setup and Installation
 
-* [ROS](http://www.ros.org/)  
-* [aruco_ros](https://github.com/pal-robotics/aruco_ros)  
-* a slightly modified [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping)  
+**Please follow the installation instructions for your Ubuntu Distrubtion [here](https://github.com/ankitdhall/lidar_camera_calibration/wiki) on the Wiki**
 
-ROS package for the camera and LiDAR you wish to calibrate.  
+## Future improvements
 
-### Installation
+As an open-source project, your contributions matter! If you would like to contribute and improve this project consider submitting a pull request.
 
-Clone this repository to your machine.  
-Put the cloned repository, `dependencies/aruco_ros` and `dependencies/aruco_mapping` folders in `path/to/your/ros/workspace/src` and run the following commands,
+- [x] iterative process with ~~weighted~~ average over multiple runs
+- [x] passing Workflows for Kinetic, Melodic and Noetic
+- [x] Hesai and Velodyne LiDAR options (see [Getting Started](#getting-started))
+- [ ] integrate LiDAR hardware from other manufacturers
+- [ ] automate process of marking line-segments
+- [ ] Github Workflow with functional test on dummy data
+- [ ] support for upcoming Linux Distros
 
-```bash
-catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco;aruco_ros;aruco_msgs"
-catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco_mapping;lidar_camera_calibration"
-catkin_make -DCATKIN_WHITELIST_PACKAGES=""
-```
 
-Please note that `aruco_mapping` in the `dependencies` folder is a slightly modified version of the original [aruco_mapping](https://github.com/SmartRoboticSystems/aruco_mapping), so make sure to use the one provided here. The aruco packages have to be installed before the main calibration package can be installed. Installing them together, in one run, can result in build errors. Hence the two separate `catkin_make` commands.
-
-Camera parameters will also be required by the package, so it is advised that you calibrate the camera beforehand.
 
 ## Getting Started
 
@@ -254,11 +243,3 @@ There is very less translation error, about 3-4 cm. Also, the ground planes alig
 The resultant fused point clouds after extrinsic calibration of stereo cameras kept at ~80 degrees using `lidar_camera_calibration` can be seen in [this video](https://youtu.be/Om1SFPAZ5Lc).  
 
 We believe, that better intrinsic calibration of the cameras can help drive down the error to about 1 centimeter or even less.
-
-
-
-## Future improvements
-
-- [x] iterative process with ~~weighted~~ average over multiple runs
-- [ ] automate process of marking line-segments
-
