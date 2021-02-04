@@ -48,7 +48,7 @@ archivePrefix = "arXiv",
 
 ## Setup and Installation
 
-**Please follow the installation instructions for your Ubuntu Distrubtion [here](https://github.com/ankitdhall/lidar_camera_calibration/wiki) on the Wiki**
+Please follow the installation instructions for your Ubuntu Distrubtion **[here](https://github.com/ankitdhall/lidar_camera_calibration/wiki/Welcome-to-%60lidar_camera_calibration%60-Wiki!)** on the Wiki
 
 ## Future improvements
 
