@@ -407,7 +407,7 @@ namespace aruco {
     assert(in.rows==in.cols);
     Mat grey;
     if ( in.type()==CV_8UC1) grey=in;
-    else cv::cvtColor(in,grey,CV_BGR2GRAY);
+    else cv::cvtColor(in,grey,cv::COLOR_BGR2GRAY);
     //threshold image
     threshold(grey, grey,125, 255, THRESH_BINARY|THRESH_OTSU);
 

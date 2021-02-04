@@ -12,7 +12,14 @@
 #include <pcl_ros/point_cloud.h>
 #include <boost/foreach.hpp>
 #include <pcl_conversions/pcl_conversions.h>
+
+#include <linux/version.h>
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,4,0)
 #include <velodyne_pointcloud/point_types.h>
+#else
+#include <velodyne_pcl/point_types.h>
+#endif
+
 #include <pcl/common/eigen.h>
 #include <pcl/common/transforms.h>
 #include <pcl/filters/passthrough.h>
@@ -79,17 +86,16 @@ void onMouse( int event, int x, int y, int f, void* g)
 	switch(event)
 	{
 
-	case  CV_EVENT_LBUTTONDOWN  :
+		case  cv::EVENT_LBUTTONDOWN :
+				P->x=x;
+				P->y=y;
+				break;
 
-									P->x=x;
-									P->y=y;
-									break;
-
-	case  CV_EVENT_LBUTTONUP    :
-									P->x=x;
-									P->y=y;
-									//std::cout << P->x << " " << P->y << "\n";
-									break;
+		case  cv::EVENT_LBUTTONUP   :
+				P->x=x;
+				P->y=y;
+				//std::cout << P->x << " " << P->y << "\n";
+				break;
 
 	default                     :   break;
 

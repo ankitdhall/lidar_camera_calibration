@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 2.4.6)
 include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 project(lidar_camera_calibration)
-set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -O3")
+# set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -O3")
+# Set target C++ standard and required compiler features
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #set the default path for built executables to the "bin" directory
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
@@ -19,6 +22,7 @@ find_package(catkin
   image_geometry
   velodyne_msgs
   velodyne_pointcloud
+  velodyne_pcl
   pcl_ros
 )
 
@@ -27,7 +31,7 @@ generate_messages(DEPENDENCIES
                   std_msgs
                   )
 
-catkin_package(CATKIN_DEPENDS std_msgs
+catkin_package(CATKIN_DEPENDS std_msgs velodyne_pointcloud velodyne_pcl
     DEPENDS eigen opencv)
 
 find_package(OpenCV REQUIRED)

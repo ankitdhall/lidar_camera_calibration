@@ -93,7 +93,7 @@ ArucoMapping::ArucoMapping(ros::NodeHandle *nh) :
   parseCalibrationFile(calib_filename_);
 
   //Initialize OpenCV window
-  cv::namedWindow("Mono8", CV_WINDOW_AUTOSIZE);       
+  cv::namedWindow("Mono8", cv::WINDOW_AUTOSIZE);       
       
   //Resize marker container
   markers_.resize(num_of_markers_);

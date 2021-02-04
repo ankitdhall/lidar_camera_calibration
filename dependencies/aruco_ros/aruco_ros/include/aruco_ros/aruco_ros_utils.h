@@ -19,7 +19,7 @@ namespace aruco_ros
                                                        bool useRectifiedParameters);
 
   //FIXME: make parameter const as soon as the used function is also const
-  tf::Transform arucoMarker2Tf(const aruco::Marker& marker);
+  tf::Transform arucoMarker2Tf(const aruco::Marker& marker, bool rotate_marker_axis=true);
 
 }
 #endif // ARUCO_ROS_UTILS_H
