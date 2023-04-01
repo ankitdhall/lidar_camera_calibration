@@ -5,6 +5,9 @@
 ![ROS Melodic](https://github.com/ankitdhall/lidar_camera_calibration/actions/workflows/melodic.yml/badge.svg)
 ![ROS Kinetic](https://github.com/ankitdhall/lidar_camera_calibration/actions/workflows/kinetic.yml/badge.svg)
 
+Did you find this package useful and would like to contribute?  
+See how you can contribute and make this package better for future users. Go to [Contributing section](#contributing).
+
 ---
 
 ## ROS package to calibrate a camera and a LiDAR.
@@ -38,7 +41,7 @@ archivePrefix = "arXiv",
 
 ## Contents
 1. [Setup and Installation](#setup-and-installation)
-2. [Future Improvements](#future-improvements)
+2. [Contributing](#contributing)
 3. [Getting Started](#getting-started)
 4. [Usage](#usage)
 5. [Results and point cloud fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration)
@@ -47,17 +50,19 @@ archivePrefix = "arXiv",
 
 Please follow the installation instructions for your Ubuntu Distrubtion **[here](https://github.com/ankitdhall/lidar_camera_calibration/wiki/Welcome-to-%60lidar_camera_calibration%60-Wiki!)** on the Wiki
 
-## Future improvements
+## Contributing
 
 As an open-source project, your contributions matter! If you would like to contribute and improve this project consider submitting a pull request.
-
-- [x] iterative process with ~~weighted~~ average over multiple runs
-- [x] passing Workflows for Kinetic, Melodic and Noetic
+That way future users can find this package useful just like you did.
+Here is a non-exhaustive list of features that can be a good starting point:
+- [x] Iterative process with ~~weighted~~ average over multiple runs
+- [x] Passing Workflows for Kinetic, Melodic and Noetic
 - [x] Hesai and Velodyne LiDAR options (see [Getting Started](#getting-started))
-- [ ] integrate LiDAR hardware from other manufacturers
-- [ ] automate process of marking line-segments
+- [ ] Integrate LiDAR hardware from other manufacturers
+- [ ] Automate process of marking line-segments
 - [ ] Github Workflow with functional test on dummy data
-- [ ] support for upcoming Linux Distros
+- [ ] Support for upcoming Linux Distros and their corresponding ROS versions
+- [ ] Tests to improve the quality of the project
 
 
 
