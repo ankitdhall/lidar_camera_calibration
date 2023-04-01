@@ -4,9 +4,10 @@
 ![ROS Noetic](https://github.com/ankitdhall/lidar_camera_calibration/actions/workflows/noetic.yml/badge.svg)
 ![ROS Melodic](https://github.com/ankitdhall/lidar_camera_calibration/actions/workflows/melodic.yml/badge.svg)
 ![ROS Kinetic](https://github.com/ankitdhall/lidar_camera_calibration/actions/workflows/kinetic.yml/badge.svg)
+![ROS2 Humble](https://github.com/ankitdhall/lidar_camera_calibration/actions/workflows/humble.yml/badge.svg)
 
-Did you find this package useful and would like to contribute?  
-See how you can contribute and make this package better for future users. Go to [Contributing section](#contributing).
+Did you find this package useful and would like to contribute? :smile:  
+See how you can contribute and make this package better for future users. Go to [Contributing section](#contributing). :hugs:
 
 ---
 
@@ -40,17 +41,17 @@ archivePrefix = "arXiv",
   
 
 ## Contents
-1. [Setup and Installation](#setup-and-installation)
-2. [Contributing](#contributing)
-3. [Getting Started](#getting-started)
-4. [Usage](#usage)
-5. [Results and point cloud fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration)
+1. [Setup and Installation](#setup-and-installation) :hammer_and_wrench:
+2. [Contributing](#contributing) :hugs:
+3. [Getting Started](#getting-started) :zap:
+4. [Usage](#usage) :beginner:
+5. [Results and point cloud fusion using `lidar_camera_calibration`](#fusion-using-lidar_camera_calibration) :checkered_flag:
 
-## Setup and Installation
+## Setup and Installation 
 
 Please follow the installation instructions for your Ubuntu Distrubtion **[here](https://github.com/ankitdhall/lidar_camera_calibration/wiki/Welcome-to-%60lidar_camera_calibration%60-Wiki!)** on the Wiki
 
-## Contributing
+## Contributing 
 
 As an open-source project, your contributions matter! If you would like to contribute and improve this project consider submitting a pull request.
 That way future users can find this package useful just like you did.
@@ -61,7 +62,8 @@ Here is a non-exhaustive list of features that can be a good starting point:
 - [ ] Integrate LiDAR hardware from other manufacturers
 - [ ] Automate process of marking line-segments
 - [ ] Github Workflow with functional test on dummy data
-- [ ] Support for upcoming Linux Distros and their corresponding ROS versions
+- [ ] Support for upcoming Linux Distros
+- [ ] Support for running the package in ROS2
 - [ ] Tests to improve the quality of the project
 
 
