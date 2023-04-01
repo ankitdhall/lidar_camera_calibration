@@ -50,8 +50,7 @@ jobs:
             python3-pytest-rerunfailures
          
           sudo apt-get install dpkg
-          sudo apt-get install -y python3-catkin-tools \
-            python3-catkin-pkg \
+          sudo apt-get install -y python3-colcon-common-extensions \
             python3-rosdep \
             python3-wstool \
             ros-$ROS_DISTRO-cv-bridge \
@@ -67,8 +66,8 @@ jobs:
       - name: build
         run: |
           source /opt/ros/$ROS_DISTRO/local_setup.bash
-          mkdir -p ~/catkin_ws/src
-          cd ~/catkin_ws/src
+          mkdir -p ~/ros2_humble/src
+          cd ~/ros2_humble/src
           ln -s ~/work  # $CI_SOURCE_PATH
           echo $PWD
           ls
@@ -78,6 +77,6 @@ jobs:
           mv work/lidar_camera_calibration/lidar_camera_calibration lidar_camera_calibration
           cd ..
           rosdep install --from-paths src --ignore-src -r -y
-          catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco;aruco_ros;aruco_msgs"
-          catkin_make -DCATKIN_WHITELIST_PACKAGES="aruco_mapping;lidar_camera_calibration"
-          catkin_make -DCATKIN_WHITELIST_PACKAGES=""
+          colcon build --symlink-install --packages-select aruco aruco_ros aruco_msgs
+          colcon build --symlink-install --packages-select aruco_mapping lidar_camera_calibration
+          colcon build --symlink-install
