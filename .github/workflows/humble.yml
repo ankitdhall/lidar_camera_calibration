@@ -55,7 +55,7 @@ jobs:
             python3-wstool \
             ros-$ROS_DISTRO-cv-bridge \
             ros-$ROS_DISTRO-image-transport
-          sudo apt-get install -y ros-$ROS_DISTRO-velodyne-pcl
+          sudo apt-get install -y ros-velodyne-pcl
           
           sudo apt upgrade
           sudo rosdep init
