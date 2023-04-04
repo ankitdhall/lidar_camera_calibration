@@ -1,0 +1,81 @@
+name: build ROS Humble (ROS 2)
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_docker:
+    strategy:
+      matrix:
+        ros_distro: [ humble ]
+        ros_repo: [ main ]
+    runs-on: ubuntu-22.04
+    env:
+      ROS_CI_DESKTOP: "`lsb_release -cs`"  # e.g. [trusty|xenial|...]
+      CI_SOURCE_PATH: $(pwd)
+      ROSINSTALL_FILE: $CI_SOURCE_PATH/dependencies.rosinstall
+      CATKIN_OPTIONS: $CI_SOURCE_PATH/catkin.options
+      ROS_PARALLEL_JOBS: '-j8 -l6'
+      PYTHONPATH: $PYTHONPATH:/usr/lib/python3/dist-packages:/usr/local/lib/python3/dist-packages
+      ROS_DISTRO: humble
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install ROS
+        run: |
+          sudo apt install software-properties-common
+          sudo add-apt-repository universe
+          
+          sudo apt update && sudo apt install curl -y
+          sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+          
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+          
+          sudo apt update && sudo apt install -y \
+            python3-flake8-docstrings \
+            python3-pip \
+            python3-pytest-cov \
+            ros-dev-tools
+          
+          sudo apt install -y \
+            python3-flake8-blind-except \
+            python3-flake8-builtins \
+            python3-flake8-class-newline \
+            python3-flake8-comprehensions \
+            python3-flake8-deprecated \
+            python3-flake8-import-order \
+            python3-flake8-quotes \
+            python3-pytest-repeat \
+            python3-pytest-rerunfailures
+         
+          sudo apt-get install dpkg
+          sudo apt-get install -y python3-colcon-common-extensions \
+            python3-rosdep \
+            python3-wstool \
+            ros-$ROS_DISTRO-cv-bridge \
+            ros-$ROS_DISTRO-image-transport
+          sudo apt-get install -y ros-velodyne-pcl
+          
+          sudo apt upgrade
+          sudo rosdep init
+          rosdep update
+          rosdep install --from-paths src --ignore-src -y --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers"
+          
+      - name: build
+        run: |
+          source /opt/ros/$ROS_DISTRO/local_setup.bash
+          mkdir -p ~/ros2_humble/src
+          cd ~/ros2_humble/src
+          ln -s ~/work  # $CI_SOURCE_PATH
+          echo $PWD
+          ls
+          ls work/lidar_camera_calibration
+          mv work/lidar_camera_calibration/lidar_camera_calibration/dependencies/aruco_ros aruco_ros
+          mv work/lidar_camera_calibration/lidar_camera_calibration/dependencies/aruco_mapping aruco_mapping
+          mv work/lidar_camera_calibration/lidar_camera_calibration lidar_camera_calibration
+          cd ..
+          rosdep install --from-paths src --ignore-src -r -y
+          colcon build --symlink-install --packages-select aruco aruco_ros aruco_msgs
+          colcon build --symlink-install --packages-select aruco_mapping lidar_camera_calibration
+          colcon build --symlink-install
