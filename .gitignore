@@ -1,0 +1,31 @@
+# Environments
+.venv
+
+# Data
+/data/
+
+# IDE
+.idea
+
+# Distribution / packaging
+**/__pycache__
+*.egg-info/
+build
+
+# Storage Files
+*.npy
+*.h5
+
+# Unit test / coverage reports
+.coverage*
+coverage*
+# But keep .coveragerc and badges
+!.coveragerc
+!.badges/*
+
+# Profiling
+profile*.html
+
+accelerate_config.yaml
+wandb
+modal_scripts

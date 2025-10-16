@@ -1,0 +1,45 @@
+line-length = 88
+
+[lint]
+select = [
+    "E",# pycodestyle
+    "F",# Pyflakes
+    "UP",# pyupgrade
+    "B",# flake8-bugbear
+    "SIM",# flake8-simplify
+    "I",# isort
+    "NPY", # numpy
+    "PD", # pandas
+    "RUF",
+    # TODO: Fix this and enable ANN
+    # "ANN", # flake8-annotations: checks for missing type hints
+]
+
+ignore = [
+    # Avoid using the generic variable name `df` for DataFrames.
+    "PD901",
+    # Use `key in dict` instead of `key in dict.keys()`
+    "SIM118",
+]
+
+
+[lint.pydocstyle]
+# Use Google-style docstrings.
+convention = "google"
+
+[lint.isort]
+force-single-line = true
+
+[format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+docstring-code-format = true
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
